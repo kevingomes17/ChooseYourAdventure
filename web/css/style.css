@@ -1,0 +1,156 @@
+/* 
+    Document   : style
+    Created on : Oct 3, 2012, 11:34:30 PM
+    Author     : kevingomes17
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+body {
+    font-family: "Verdana";
+    background-color: #efefef;
+}
+body * {
+    font-size: 14px;
+}
+h1, h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;    
+}
+h2 {
+    font-size: 20px;
+}
+h1 {
+    text-align: center;
+    border-bottom: 1px solid #000;
+    font-size: 22px;
+}
+h4 {
+    border-bottom: 1px solid #cfcfcf;
+    margin-bottom: 5px;
+}
+.main-wrapper { 
+    display: block;
+    width: 980px;
+    margin: auto;
+    background-color: #fff;
+    padding: 4px;
+}
+#content {
+    padding: 4px 0 10px 0;
+    min-height: 500px;
+}
+#footer {
+    border-top: 1px solid #000;
+    padding: 4px 0 0 0;
+    font-size: 0.9em;
+    text-align: center;
+}
+#primary-menu {
+    margin-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    background-color: #000;    
+}
+#primary-menu li {
+    display: inline-block;    
+    border-right: 1px solid #fff;
+    padding-right: 4px;
+    width: 120px;
+    text-align: center;
+    padding: 4px;
+}
+#primary-menu li a {
+    text-decoration: none;    
+    color: #fff;
+}
+#primary-menu li a:hover {
+    color: #b00;
+}
+.pointer {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #b00;
+}
+.ui-autocomplete-loading { background:url('img/loading.gif') no-repeat right center }
+label.error {
+    color: #b00;
+}
+
+.cols-layout-3 {
+    clear: both;
+}
+.cols-layout-3 .col-33,
+.cols-layout-3 .col-33, 
+.cols-layout-3 .col-33 {
+    width: 33%;
+    float: left;
+}
+.cols-layout-3 .col-25 {
+    float: left;
+    width: 25%;
+}
+.cols-layout-3 .col-20 {
+    float: left;
+    width: 20%;
+}
+.cols-layout-3 .col-45 {
+    float: left;
+    width: 45%;
+}
+
+.cols-layout-2 {
+    clear: both;
+    width: 100%;
+}
+.cols-layout-2 .col-1,
+.cols-layout-2 .col-2 {
+    float: left;
+    width: 45%
+}
+.clear {
+    clear: both;
+}
+
+.error-messages {
+    background-color: #FFC0CB;
+    border: 1px solid #B00B00;
+    padding: 4px;
+    margin: 8px 0 8px 0;
+}
+.error-messages ul {
+    margin: 0;
+    padding: 0;
+}
+.error-messages ul li {
+    list-style: none;
+    padding: 0;
+    margin-left: 0;
+}
+
+.ui-tabs-panel {
+    padding: 0.5em !important;
+}
+input.size4 {
+    width: 40px;
+}
+input.size25 {
+    width: 250px;
+}
+input.size8 {
+    width: 80px;
+}
+select.size39 {
+    width: 390px;
+}
+textarea {
+    width: 440px;
+    height: 80px;
+}

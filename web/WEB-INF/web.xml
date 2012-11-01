@@ -23,5 +23,16 @@
     </session-config>
     <welcome-file-list>
         <welcome-file>redirect.jsp</welcome-file>
-    </welcome-file-list>
+    </welcome-file-list>    
+        
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <form-login-config>
+            <form-login-page>/user/login.htm</form-login-page>
+            <form-error-page>/user/login.htm</form-error-page>
+        </form-login-config>
+    </login-config>
+    <security-role>
+            <role-name>authn_user</role-name>
+    </security-role>
 </web-app>
