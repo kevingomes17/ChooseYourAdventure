@@ -4,7 +4,6 @@
  */
 package org.chooseadventure.service;
 
-import com.sun.tools.internal.xjc.api.S2JJAXBModel;
 import java.util.List;
 //import javax.management.j2ee.statistics.JDBCConnectionPoolStats;
 import javax.persistence.EntityManager;
