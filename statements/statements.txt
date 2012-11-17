@@ -1,1 +1,130 @@
+-- A.1 
+select displayname,address,city,zipcode from userbase;
+select userid, phone from userphones;
+select CREDITCARDNUMBER, EXPIRYDATE, CODE from userpaymentinfo;
+
+-- update address, phones credit details if needed.
+
+-- A.2
+-- Develop screens for viewing memberinformation
+-- Allow CEO, VP of marketing and web administrator roles to view other members info who are of userwebsite table
+
+
+-- A.3
+-- Not sure how to do this
+
+
+-- B.1 Register and puchase ticket--
+
+-- Seelect city
+select  id,name from city;
+
+-- Select attraction from the list of attractions 
+select  att.id,att.name from city, attraction att  where city.id = att.cityid and city.id = 1 order by  2,1;
+
+-- View attraction description, timings, ticket price
+select id,name,address, description,default_no_tickets,attractiontypeid, timings, commission, companyid, directorid, costperticket
+from attraction where attraction.id =1;
+
+-- View top 10 reviews of attraction
+select title, description from attractionreview where attractionid = 1 ;
+
+-- Select no. of tickets required and date. Show availability
+select  remainingtickets from ticketsavailable where attractionid=1 and dateavailable='1-1-2012';
+
+-- Add attraction to cart. The guest user needs to sign up for this and registered user needs to sign in
+-- Sign Up
+
+Insert into userbase values (0,'James Morrison','jmorris@gmail.com','1234','220 W silk walk','chicago',60610,1,CURRENT_DATE,1,CURRENT_DATE);
+
+
+Insert into userpaymentinfo values(43,2222333344445555,to_date('1-1-2014'),324,1,CURRENT_DATE,1,CURRENT_DATE);
+Insert into userwebsite values(43,0,0,4,1,CURRENT_DATE,1,CURRENT_DATE);
+
+-- Purchase ticket for the selected attraction
+Insert into transactioninfo values(0,43,100,0,100,1,CURRENT_DATE,1,CURRENT_DATE);
+Insert into transactionattraction values(0,2,1,1,to_date('1-1-2013'),1,CURRENT_DATE,1,CURRENT_DATE);
+
+-- insert the revnue gained 
+insert into revenue values(2,100,1,1,CURRENT_DATE,1,CURRENT_DATE);
+
+-- Give 1 percent of amount as reward and credit points for transaction
+update userwebsite set rewardpoints = rewardpoints + 0.05 * 100 where userid=43;
+update userwebsite set creditpoints = creditpoints + 0.05 * 100 where userid=43;
+
+-- Register and puchase ticket complete --
+
+
+-- B.2 Login and add commment to existing thread, start new thread.
+-- Login
+
+select id from userbase where email='amathewi@hawk.iit.edu' and password='1234';
+-- Add comment to existing thread/review
+-- Select a review from list of reviews
+select id, Title, description from attractionreview where attractionid =1;
+-- Add comment for selected review
+Insert into comments values(0,1,'very nice review',7,1,CURRENT_DATE,1,CURRENT_DATE);
+-- update reward points by 2 dollars
+update userwebsite set rewardpoints = rewardpoints + 2 where userid=7;
+update userwebsite set creditpoints = creditpoints + 2 where userid=7;
+
+-- create new review
+-- check if the user has visited teh place
+select * from attractionvisited where attractionid=1 and userid=7;
+
+-- create review for selected attraction from the above 
+-- select topic for attraction
+select dt.id, dt.title from discussiontopicbyattraction dta, discussiontopic dt where dta.discussiontopicid = dt.id and dta.attractionid = 1;
+
+-- insert into discussion threads
+Insert into discussionthread values (0,2,'For Fall', 'The best time to visit during fall is late fall.',7,1,CURRENT_DATE,1,CURRENT_DATE);
+-- update reward points by 2 dollars
+update userwebsite set rewardpoints = rewardpoints + 2 where userid=7;
+update userwebsite set creditpoints = creditpoints + 2 where userid=7;
+
+-- B.3 show change in reward points of the above user for adding comments and new thread
+select rewardpoints, creditpoints, membershiptype  from userwebsite where userid=7;
+
+
+-- B.4 Purchasing ticket package using credit card and reward points
+-- Login
+
+select id from userbase where email='amathewi@hawk.iit.edu' and password='1234';
+-- Seelect city
+select  id,name from city;
+
+-- Select package from the list of packages
+select id, name, description, costperticket from packages;
+
+-- View attraction in the package
+Select * from packageattraction where packageid = 1;
+-- View attraction in package description, timings, ticket price
+select  att.id,att.name, att.address, att.description, att.timings, att.commission, att.companyid from packageattraction pa, attraction att  where pa.attractionid = att.id and pa.packageid = 1 order by  2,1;
+
+
+-- View top 10 reviews of any attraction in package attraction
+select title, description from attractionreview where attractionid = 1 ;
+
+-- Select no. of tickets required and date. Show availability
+select  remainingtickets from ticketsavailable where attractionid=1 and dateavailable='1-1-2012';
+
+--Check if user has enough reward points as mentioned by him for buying ticket
+select rewardpoints from userwebsite where userid=7;
+
+-- Purchase ticket for the selected attraction
+
+Insert into transactioninfo values(0,7,400,100,300,1,CURRENT_DATE,1,CURRENT_DATE);
+Insert into transactionattraction values(0,3,1,1,to_date('1-1-2013'),1,CURRENT_DATE,1,CURRENT_DATE);
+
+-- Update revenue tables
+-- calculate the revenue gained through own company and commision gained through other companies.
+
+-- insert the revnue gained 
+insert into revenue values(3,400,1,1,CURRENT_DATE,1,CURRENT_DATE);
+
+-- Give 1 percent of amount as reward and credit points for transaction
+update userwebsite set rewardpoints = rewardpoints + 0.05 * 400 where userid=7;
+update userwebsite set creditpoints = creditpoints + 0.05 * 400 where userid=7;
+
+
 fwedfdfefvvart45rgrh5ty
