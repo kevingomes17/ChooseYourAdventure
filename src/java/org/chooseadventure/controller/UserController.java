@@ -9,11 +9,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import org.chooseadventure.service.*;
 import org.chooseadventure.entity.*;
 import org.springframework.util.StringUtils;
@@ -26,10 +24,21 @@ import javax.servlet.http.HttpSession;
  */
 @Controller
 public class UserController extends BaseController {
-
     @Autowired
-    private UserDao userDao;
+    private UserDao userDao;     
 
+    @RequestMapping(value = "/add")
+    public String insert(HttpServletRequest request, HttpServletResponse response, Model model) {
+        if("POST".equals(request.getMethod())) {
+            //userDao.add();            
+        } 
+        
+        //List<City> cities = userDao.getCities();
+        //model.addAttribute("cities", cities);
+        setModelParameters(request, model, "add_city.jsp", "Add City");
+        return TemplateFile;
+    }
+    
     /**
      * TODO: Redirect to home page if user is already logged in.
      * 
@@ -82,9 +91,15 @@ public class UserController extends BaseController {
         return "redirect:" + LoginUrl;
     }
 
+    @RequestMapping(value = "/profile")
+    public String profile(HttpServletRequest request, HttpServletResponse response, Model model) {
+        
+        setModelParameters(request, model, "user_profile.jsp", "Profile");
+        return TemplateFile;
+    }
+    
     private Boolean authenticateUser(String email) {
         Boolean flag = false;
-        //return true;
 
         Userbase userObj = userDao.getUser(email);
         if (userObj == null) {

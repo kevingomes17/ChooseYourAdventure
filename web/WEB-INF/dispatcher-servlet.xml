@@ -37,6 +37,6 @@
           class="org.springframework.web.servlet.mvc.ParameterizableViewController"
           p:viewName="index" />
           
-    <context:component-scan base-package="org.chooseadventure.*"/>           
+    <context:component-scan base-package="org.chooseadventure.*"/>          
     
 </beans>

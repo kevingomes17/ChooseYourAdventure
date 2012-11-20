@@ -33,12 +33,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 public class BaseController {        
     protected ArrayList<String> Errors = new ArrayList();
     
-    protected String BasePath = "/itv-v2"; //no trailing slash
+    protected String BasePath = "/ChooseYourAdventure"; //no trailing slash
     protected String TemplateFile = "TemplateMain"; //Html template
     protected String TemplateJson = "TemplateJson"; //JSON template
     protected String TemplateSubForm = "TemplateSubForm"; //Sub-form template
     
-    protected String HomeUrl = "/voucher/home.htm";
+    protected String HomeUrl = "/user/profile.htm";
     protected String LoginUrl = "/user/login.htm";
     protected String LogoutUrl = "/user/logout.htm";
     
