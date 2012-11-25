@@ -1,20 +1,44 @@
--- A.1 
-select displayname,address,city,zipcode from userbase;
-select userid, phone from userphones;
-select CREDITCARDNUMBER, EXPIRYDATE, CODE from userpaymentinfo;
+-- A.1 Show that a registered guest can view his own information; change his phone number but
+--     not his membership status nor his reward points.
 
+select displayname,address,city,zipcode from userbase ub where ub.id=7;
+
+select userid, phonenumber from userphones where userid=7;
+select CREDITCARDNUMBER, EXPIRYDATE, CODE from userpaymentinfo where userid=7;
+select rewardpoints,creditpoints from userwebsite where userid=7;
+select * from membership_type;
+select name from membership_type where credit_points_needed <= (select creditpoints from userwebsite where userid=7) and rownum=1;
 -- update address, phones credit details if needed.
+update userbase set address='650 w 31st street', city='chicago south',zipcode=60616 where id=7;
+insert into userphones values(0,7,1234567890,1,CURRENT_DATE,1,CURRENT_DATE);
 
--- A.2
+-- A.2 Show that only the guest himself, the CEO, the VP of marketing and the web
+--      administrator can view the guest’s information.
+
 -- Develop screens for viewing memberinformation
 -- Allow CEO, VP of marketing and web administrator roles to view other members info who are of userwebsite table
 
+-- Get user role. Check if user role is CEO, VP of marketing and web administrator. If so allow user to view other user information
+select employeerole.employeeid,role.id,role.name from role,employeerole where role.id = employeerole.roleid and employeerole.employeeid=1;
 
--- A.3
--- Not sure how to do this
+select displayname,address,city,zipcode from userbase ub where ub.id=7;
+select userid, phone from userphones;
+select CREDITCARDNUMBER, EXPIRYDATE, CODE from userpaymentinfo;
+select rewardpoints,creditpoints from userwebsite where userid=7;
+select name from membership_type where credit_points_needed <= (select creditpoints from userwebsite where userid=7) and rownum=1;
 
 
--- B.1 Register and puchase ticket--
+-- A.3 Show that the CEO can delegate the staffing level (how many people are needed for a
+--       certain job) of some attractions to their directors.
+
+-- We need to delegate the staffing level for attraction to directors. This means only CEO has the right to 
+-- update teh attractionmanagement table. However he can allow the director to change this.
+update attractionmanagement set staffdelegationflag=1 where attractionid=1;
+
+
+-- B.1 Demonstrate the process of a guest registers for the first time and purchasing a ticket to
+--       an attraction.
+
 
 -- Seelect city
 select  id,name from city;
@@ -30,7 +54,7 @@ from attraction where attraction.id =1;
 select title, description from attractionreview where attractionid = 1 ;
 
 -- Select no. of tickets required and date. Show availability
-select  remainingtickets from ticketsavailable where attractionid=1 and dateavailable='1-1-2012';
+select  remainingtickets from ticketsavailable where attractionid=1 and dateavailable='1-jan-2013';
 
 -- Add attraction to cart. The guest user needs to sign up for this and registered user needs to sign in
 -- Sign Up
@@ -38,15 +62,15 @@ select  remainingtickets from ticketsavailable where attractionid=1 and dateavai
 Insert into userbase values (0,'James Morrison','jmorris@gmail.com','1234','220 W silk walk','chicago',60610,1,CURRENT_DATE,1,CURRENT_DATE);
 
 
-Insert into userpaymentinfo values(43,2222333344445555,to_date('1-1-2014'),324,1,CURRENT_DATE,1,CURRENT_DATE);
+Insert into userpaymentinfo values(43,2222333344445555,to_date('1-jan-2014'),324,1,CURRENT_DATE,1,CURRENT_DATE);
 Insert into userwebsite values(43,0,0,4,1,CURRENT_DATE,1,CURRENT_DATE);
 
 -- Purchase ticket for the selected attraction
 Insert into transactioninfo values(0,43,100,0,100,1,CURRENT_DATE,1,CURRENT_DATE);
-Insert into transactionattraction values(0,2,1,1,to_date('1-1-2013'),1,CURRENT_DATE,1,CURRENT_DATE);
+Insert into transactionattraction values(0,1,1,1,to_date('1-JAN-2013'),1,CURRENT_DATE,1,CURRENT_DATE);
 
 -- insert the revnue gained 
-insert into revenue values(2,100,1,1,CURRENT_DATE,1,CURRENT_DATE);
+insert into revenue values(1,100,1,1,CURRENT_DATE,1,CURRENT_DATE);
 
 -- Give 1 percent of amount as reward and credit points for transaction
 update userwebsite set rewardpoints = rewardpoints + 0.05 * 100 where userid=43;
@@ -55,7 +79,9 @@ update userwebsite set creditpoints = creditpoints + 0.05 * 100 where userid=43;
 -- Register and puchase ticket complete --
 
 
--- B.2 Login and add commment to existing thread, start new thread.
+-- B.2 Demonstrate the process of a registered guest logs into his account, adds a comment on
+--        an existing thread and starts a new thread.
+
 -- Login
 
 select id from userbase where email='amathewi@hawk.iit.edu' and password='1234';
@@ -70,23 +96,26 @@ update userwebsite set creditpoints = creditpoints + 2 where userid=7;
 
 -- create new review
 -- check if the user has visited teh place
-select * from attractionvisited where attractionid=1 and userid=7;
+INSERT INTO ATTRACTIONVISITED VALUES(0,1,1,43,1,CURRENT_DATE,1,CURRENT_DATE);
+select * from attractionvisited where attractionid=1 and userid=43;
 
 -- create review for selected attraction from the above 
 -- select topic for attraction
 select dt.id, dt.title from discussiontopicbyattraction dta, discussiontopic dt where dta.discussiontopicid = dt.id and dta.attractionid = 1;
 
 -- insert into discussion threads
-Insert into discussionthread values (0,2,'For Fall', 'The best time to visit during fall is late fall.',7,1,CURRENT_DATE,1,CURRENT_DATE);
+Insert into discussionthread values (0,2,'For Fall', 'The best time to visit during fall is late fall.',43,1,CURRENT_DATE,1,CURRENT_DATE);
 -- update reward points by 2 dollars
-update userwebsite set rewardpoints = rewardpoints + 2 where userid=7;
-update userwebsite set creditpoints = creditpoints + 2 where userid=7;
+update userwebsite set rewardpoints = rewardpoints + 2 where userid=43;
+update userwebsite set creditpoints = creditpoints + 2 where userid=43;
 
 -- B.3 show change in reward points of the above user for adding comments and new thread
-select rewardpoints, creditpoints, membershiptype  from userwebsite where userid=7;
+select rewardpoints, creditpoints, membershiptype  from userwebsite where userid=43;
 
 
--- B.4 Purchasing ticket package using credit card and reward points
+-- B.4 Demonstrate that the registered guest can purchase a ticket package using his reward
+--      points and credit card.
+
 -- Login
 
 select id from userbase where email='amathewi@hawk.iit.edu' and password='1234';
@@ -104,17 +133,20 @@ select  att.id,att.name, att.address, att.description, att.timings, att.commissi
 
 -- View top 10 reviews of any attraction in package attraction
 select title, description from attractionreview where attractionid = 1 ;
-
+select title, description from attractionreview where attractionid = 2 ;
+select title, description from attractionreview where attractionid = 6 ;
 -- Select no. of tickets required and date. Show availability
-select  remainingtickets from ticketsavailable where attractionid=1 and dateavailable='1-1-2012';
+select  remainingtickets from ticketsavailable where attractionid=1 and dateavailable='1-JAN-2013';
+select  remainingtickets from ticketsavailable where attractionid=2 and dateavailable='1-JAN-2013';
+select  remainingtickets from ticketsavailable where attractionid=6 and dateavailable='1-JAN-2013';
 
 --Check if user has enough reward points as mentioned by him for buying ticket
-select rewardpoints from userwebsite where userid=7;
+select rewardpoints from userwebsite where userid=43;
 
 -- Purchase ticket for the selected attraction
 
-Insert into transactioninfo values(0,7,400,100,300,1,CURRENT_DATE,1,CURRENT_DATE);
-Insert into transactionattraction values(0,3,1,1,to_date('1-1-2013'),1,CURRENT_DATE,1,CURRENT_DATE);
+Insert into transactioninfo values(0,43,400,100,300,1,CURRENT_DATE,1,CURRENT_DATE);
+Insert into transactionattraction values(0,2,1,1,to_date('1-JAN-2013'),1,CURRENT_DATE,1,CURRENT_DATE);
 
 -- Update revenue tables
 -- calculate the revenue gained through own company and commision gained through other companies.
@@ -123,8 +155,44 @@ Insert into transactionattraction values(0,3,1,1,to_date('1-1-2013'),1,CURRENT_D
 insert into revenue values(3,400,1,1,CURRENT_DATE,1,CURRENT_DATE);
 
 -- Give 1 percent of amount as reward and credit points for transaction
-update userwebsite set rewardpoints = rewardpoints + 0.05 * 400 where userid=7;
-update userwebsite set creditpoints = creditpoints + 0.05 * 400 where userid=7;
+update userwebsite set rewardpoints = rewardpoints + 0.05 * 400 where userid=43;
+update userwebsite set creditpoints = creditpoints + 0.05 * 400 where userid=43;
+
+--B5 Demonstrate the process of a general public visiting the web site and reads a comment on
+--    the thread just created, says that he likes the comment, but he cannot enter a comment.
 
 
-fwedfdfefvvart45rgrh5ty
+insert into likes values(0,2,7,1,1,1,CURRENT_DATE,1,CURRENT_DATE);
+
+--B.6 Demonstrate the process of the VP of marketing making assignments to members in his
+--organization into different task teams. Alerts if a member is put into more than three
+--teams and if a team does not have either the VP or the chief editor there to provide
+--leadership. Leaders can be in many teams as they do not do the real work.
+
+--select * from attractionmanagement where attractionid=1;
+--select am.attractionid,um.displayname, role.name from attractionemployee am,userbase um, employeerole er,role  where er.employeeid = am.employeeid
+--           and er.employeeid = um.id and role.id = er.roleid and attractionid=1;
+--update attractionmanagement set securitycount=2 where attractionid=1;
+
+select * from team where id=1;
+-- Check which teams a person is in
+select ub.id,ub.displayname, team.name from employee_team et , team, userbase ub 
+where et.teamid=team.id and ub.id = et.employeeid and et.employeeid=6
+order by team.id;
+
+--test
+insert into employee_team values(6,1,1,CURRENT_DATE,1,CURRENT_DATE);
+insert into employee_team values(6,2,1,CURRENT_DATE,1,CURRENT_DATE);
+insert into employee_team values(6,4,1,CURRENT_DATE,1,CURRENT_DATE);
+insert into employee_team values(32,4,1,CURRENT_DATE,1,CURRENT_DATE);
+
+--to check if a team does not have a VP or CHIEF_EDITOR as the boss
+select * from role;
+select * from employee_team where employeeid<5;
+
+-- teams which do not have the CEO VP marketing or chief editor as team member
+select id from team minus 
+select et.teamid  from  employeerole er, employee_team et 
+where  er.employeeid = et.employeeid and
+er.roleid <5;
+
