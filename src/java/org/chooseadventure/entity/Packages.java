@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Packages.findAll", query = "SELECT p FROM Packages p"),
     @NamedQuery(name = "Packages.findById", query = "SELECT p FROM Packages p WHERE p.id = :id"),
+    @NamedQuery(name = "Packages.findByCityId", query = "SELECT p FROM Packages p WHERE p.cityId = :cityId"),
     @NamedQuery(name = "Packages.findByName", query = "SELECT p FROM Packages p WHERE p.name = :name"),
     @NamedQuery(name = "Packages.findByDescription", query = "SELECT p FROM Packages p WHERE p.description = :description"),
     @NamedQuery(name = "Packages.findByCostperticket", query = "SELECT p FROM Packages p WHERE p.costperticket = :costperticket"),
@@ -52,10 +53,10 @@ public class Packages implements Serializable {
     private BigDecimal id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+    @Size(min = 1, max = 50)
     @Column(name = "NAME")
     private String name;
-    @Size(max = 200)
+    @Size(max = 2000)
     @Column(name = "DESCRIPTION")
     private String description;
     @Basic(optional = false)
@@ -80,6 +81,10 @@ public class Packages implements Serializable {
     @Column(name = "MODIFIEDON")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedon;
+    @Column(name = "city_id")
+    private BigDecimal cityId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "packages")
+    private Collection<Packageattraction> packageattractionCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "packageid")
     private Collection<Transactionpackage> transactionpackageCollection;
 
@@ -162,6 +167,23 @@ public class Packages implements Serializable {
 
     public void setModifiedon(Date modifiedon) {
         this.modifiedon = modifiedon;
+    }
+
+    public BigDecimal getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(BigDecimal cityId) {
+        this.cityId = cityId;
+    }
+    
+    @XmlTransient
+    public Collection<Packageattraction> getPackageattractionCollection() {
+        return packageattractionCollection;
+    }
+
+    public void setPackageattractionCollection(Collection<Packageattraction> packageattractionCollection) {
+        this.packageattractionCollection = packageattractionCollection;
     }
 
     @XmlTransient

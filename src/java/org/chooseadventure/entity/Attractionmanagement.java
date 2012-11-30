@@ -40,7 +40,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Attractionmanagement.findByModifiedby", query = "SELECT a FROM Attractionmanagement a WHERE a.modifiedby = :modifiedby"),
     @NamedQuery(name = "Attractionmanagement.findByModifiedon", query = "SELECT a FROM Attractionmanagement a WHERE a.modifiedon = :modifiedon"),
     @NamedQuery(name = "Attractionmanagement.findByCreatedby", query = "SELECT a FROM Attractionmanagement a WHERE a.createdby = :createdby"),
-    @NamedQuery(name = "Attractionmanagement.findByCreatedon", query = "SELECT a FROM Attractionmanagement a WHERE a.createdon = :createdon")})
+    @NamedQuery(name = "Attractionmanagement.findByCreatedon", query = "SELECT a FROM Attractionmanagement a WHERE a.createdon = :createdon"),
+    @NamedQuery(name = "Attractionmanagement.findByStaffdelegationflag", query = "SELECT a FROM Attractionmanagement a WHERE a.staffdelegationflag = :staffdelegationflag")})
 public class Attractionmanagement implements Serializable {
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -87,6 +88,8 @@ public class Attractionmanagement implements Serializable {
     @Column(name = "CREATEDON")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdon;
+    @Column(name = "STAFFDELEGATIONFLAG")
+    private Short staffdelegationflag;
     @JoinColumn(name = "ATTRACTIONID", referencedColumnName = "ID", insertable = false, updatable = false)
     @OneToOne(optional = false)
     private Attraction attraction;
@@ -189,6 +192,14 @@ public class Attractionmanagement implements Serializable {
 
     public void setCreatedon(Date createdon) {
         this.createdon = createdon;
+    }
+
+    public Short getStaffdelegationflag() {
+        return staffdelegationflag;
+    }
+
+    public void setStaffdelegationflag(Short staffdelegationflag) {
+        this.staffdelegationflag = staffdelegationflag;
     }
 
     public Attraction getAttraction() {

@@ -56,7 +56,7 @@ public class Userbase implements Serializable {
     private BigDecimal id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+    @Size(min = 1, max = 50)
     @Column(name = "DISPLAYNAME")
     private String displayname;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
@@ -72,16 +72,17 @@ public class Userbase implements Serializable {
     private String password;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 70)
     @Column(name = "ADDRESS")
     private String address;
-    @Size(max = 20)
+    @Size(max = 50)
     @Column(name = "CITY")
     private String city;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 20)
     @Column(name = "ZIPCODE")
-    private BigInteger zipcode;
+    private String zipcode;
     @Basic(optional = false)
     @NotNull
     @Column(name = "CREATEDBY")
@@ -132,7 +133,7 @@ public class Userbase implements Serializable {
         this.id = id;
     }
 
-    public Userbase(BigDecimal id, String displayname, String email, String password, String address, BigInteger zipcode, BigInteger createdby, Date createdon, BigInteger modifiedby, Date modifiedon) {
+    public Userbase(BigDecimal id, String displayname, String email, String password, String address, String zipcode, BigInteger createdby, Date createdon, BigInteger modifiedby, Date modifiedon) {
         this.id = id;
         this.displayname = displayname;
         this.email = email;
@@ -193,11 +194,11 @@ public class Userbase implements Serializable {
         this.city = city;
     }
 
-    public BigInteger getZipcode() {
+    public String getZipcode() {
         return zipcode;
     }
 
-    public void setZipcode(BigInteger zipcode) {
+    public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
     }
 

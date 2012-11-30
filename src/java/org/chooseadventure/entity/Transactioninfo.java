@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -86,8 +87,12 @@ public class Transactioninfo implements Serializable {
     private Userbase userid;
     @OneToMany(mappedBy = "transactionid")
     private Collection<Attractionvisited> attractionvisitedCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactioninfo")
+    private Collection<Transactiondiscount> transactiondiscountCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactionid")
     private Collection<Transactionreward> transactionrewardCollection;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "transactioninfo")
+    private Revenue revenue;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactionid")
     private Collection<Transactionpackage> transactionpackageCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactionid")
@@ -193,12 +198,29 @@ public class Transactioninfo implements Serializable {
     }
 
     @XmlTransient
+    public Collection<Transactiondiscount> getTransactiondiscountCollection() {
+        return transactiondiscountCollection;
+    }
+
+    public void setTransactiondiscountCollection(Collection<Transactiondiscount> transactiondiscountCollection) {
+        this.transactiondiscountCollection = transactiondiscountCollection;
+    }
+
+    @XmlTransient
     public Collection<Transactionreward> getTransactionrewardCollection() {
         return transactionrewardCollection;
     }
 
     public void setTransactionrewardCollection(Collection<Transactionreward> transactionrewardCollection) {
         this.transactionrewardCollection = transactionrewardCollection;
+    }
+
+    public Revenue getRevenue() {
+        return revenue;
+    }
+
+    public void setRevenue(Revenue revenue) {
+        this.revenue = revenue;
     }
 
     @XmlTransient

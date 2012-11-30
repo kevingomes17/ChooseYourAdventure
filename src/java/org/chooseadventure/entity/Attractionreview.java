@@ -51,10 +51,10 @@ public class Attractionreview implements Serializable {
     @NotNull
     @Column(name = "ID")
     private BigDecimal id;
-    @Size(max = 200)
+    @Size(max = 2000)
     @Column(name = "DESCRIPTION")
     private String description;
-    @Size(max = 50)
+    @Size(max = 70)
     @Column(name = "TITLE")
     private String title;
     @Basic(optional = false)

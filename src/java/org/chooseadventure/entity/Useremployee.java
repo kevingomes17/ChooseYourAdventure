@@ -53,7 +53,7 @@ public class Useremployee implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "SSN")
-    private BigInteger ssn;
+    private int ssn;
     @Basic(optional = false)
     @NotNull
     @Column(name = "COMPANYID")
@@ -84,7 +84,13 @@ public class Useremployee implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bossEmployeeId")
     private Collection<Team> teamCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "useremployee")
+    private Collection<EmployeeTeam> employeeTeamCollection;
+    @OneToMany(mappedBy = "directorid")
+    private Collection<Attraction> attractionCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "useremployee")
     private Collection<Employeerole> employeeroleCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "useremployee")
+    private Collection<Employeedateworking> employeedateworkingCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "useremployee")
     private Collection<Employeeboss> employeebossCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "useremployee1")
@@ -97,7 +103,7 @@ public class Useremployee implements Serializable {
         this.userid = userid;
     }
 
-    public Useremployee(BigDecimal userid, BigInteger ssn, BigInteger companyid, BigInteger createdby, Date createdon, BigInteger modifiedby, Date modifiedon) {
+    public Useremployee(BigDecimal userid, int ssn, BigInteger companyid, BigInteger createdby, Date createdon, BigInteger modifiedby, Date modifiedon) {
         this.userid = userid;
         this.ssn = ssn;
         this.companyid = companyid;
@@ -115,11 +121,11 @@ public class Useremployee implements Serializable {
         this.userid = userid;
     }
 
-    public BigInteger getSsn() {
+    public int getSsn() {
         return ssn;
     }
 
-    public void setSsn(BigInteger ssn) {
+    public void setSsn(int ssn) {
         this.ssn = ssn;
     }
 
@@ -190,12 +196,39 @@ public class Useremployee implements Serializable {
     }
 
     @XmlTransient
+    public Collection<EmployeeTeam> getEmployeeTeamCollection() {
+        return employeeTeamCollection;
+    }
+
+    public void setEmployeeTeamCollection(Collection<EmployeeTeam> employeeTeamCollection) {
+        this.employeeTeamCollection = employeeTeamCollection;
+    }
+
+    @XmlTransient
+    public Collection<Attraction> getAttractionCollection() {
+        return attractionCollection;
+    }
+
+    public void setAttractionCollection(Collection<Attraction> attractionCollection) {
+        this.attractionCollection = attractionCollection;
+    }
+
+    @XmlTransient
     public Collection<Employeerole> getEmployeeroleCollection() {
         return employeeroleCollection;
     }
 
     public void setEmployeeroleCollection(Collection<Employeerole> employeeroleCollection) {
         this.employeeroleCollection = employeeroleCollection;
+    }
+
+    @XmlTransient
+    public Collection<Employeedateworking> getEmployeedateworkingCollection() {
+        return employeedateworkingCollection;
+    }
+
+    public void setEmployeedateworkingCollection(Collection<Employeedateworking> employeedateworkingCollection) {
+        this.employeedateworkingCollection = employeedateworkingCollection;
     }
 
     @XmlTransient

@@ -50,7 +50,7 @@ public class City implements Serializable {
     private BigDecimal id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+    @Size(min = 1, max = 50)
     @Column(name = "NAME")
     private String name;
     @Basic(optional = false)
@@ -71,6 +71,8 @@ public class City implements Serializable {
     @Column(name = "MODIFIEDON")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedon;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
+    private Collection<Discussiontopicbycity> discussiontopicbycityCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cityid")
     private Collection<Attraction> attractionCollection;
 
@@ -136,6 +138,15 @@ public class City implements Serializable {
 
     public void setModifiedon(Date modifiedon) {
         this.modifiedon = modifiedon;
+    }
+
+    @XmlTransient
+    public Collection<Discussiontopicbycity> getDiscussiontopicbycityCollection() {
+        return discussiontopicbycityCollection;
+    }
+
+    public void setDiscussiontopicbycityCollection(Collection<Discussiontopicbycity> discussiontopicbycityCollection) {
+        this.discussiontopicbycityCollection = discussiontopicbycityCollection;
     }
 
     @XmlTransient

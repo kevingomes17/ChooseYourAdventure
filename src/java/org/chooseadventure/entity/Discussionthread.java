@@ -51,10 +51,10 @@ public class Discussionthread implements Serializable {
     @NotNull
     @Column(name = "ID")
     private BigDecimal id;
-    @Size(max = 50)
+    @Size(max = 70)
     @Column(name = "TITLE")
     private String title;
-    @Size(max = 200)
+    @Size(max = 2000)
     @Column(name = "DESCRIPTION")
     private String description;
     @Basic(optional = false)

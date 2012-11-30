@@ -51,10 +51,10 @@ public class Discussiontopic implements Serializable {
     private BigDecimal id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 70)
     @Column(name = "TITLE")
     private String title;
-    @Size(max = 200)
+    @Size(max = 2000)
     @Column(name = "DESCRIPTION")
     private String description;
     @Basic(optional = false)
@@ -75,6 +75,10 @@ public class Discussiontopic implements Serializable {
     @Column(name = "MODIFIEDON")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedon;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discussiontopic")
+    private Collection<Discussiontopicbyattraction> discussiontopicbyattractionCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discussiontopic")
+    private Collection<Discussiontopicbycity> discussiontopicbycityCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "topicid")
     private Collection<Discussionthread> discussionthreadCollection;
 
@@ -148,6 +152,24 @@ public class Discussiontopic implements Serializable {
 
     public void setModifiedon(Date modifiedon) {
         this.modifiedon = modifiedon;
+    }
+
+    @XmlTransient
+    public Collection<Discussiontopicbyattraction> getDiscussiontopicbyattractionCollection() {
+        return discussiontopicbyattractionCollection;
+    }
+
+    public void setDiscussiontopicbyattractionCollection(Collection<Discussiontopicbyattraction> discussiontopicbyattractionCollection) {
+        this.discussiontopicbyattractionCollection = discussiontopicbyattractionCollection;
+    }
+
+    @XmlTransient
+    public Collection<Discussiontopicbycity> getDiscussiontopicbycityCollection() {
+        return discussiontopicbycityCollection;
+    }
+
+    public void setDiscussiontopicbycityCollection(Collection<Discussiontopicbycity> discussiontopicbycityCollection) {
+        this.discussiontopicbycityCollection = discussiontopicbycityCollection;
     }
 
     @XmlTransient

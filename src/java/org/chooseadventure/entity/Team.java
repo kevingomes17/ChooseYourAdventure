@@ -7,8 +7,10 @@ package org.chooseadventure.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,12 +18,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -48,7 +52,7 @@ public class Team implements Serializable {
     private BigDecimal id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+    @Size(min = 1, max = 50)
     @Column(name = "NAME")
     private String name;
     @Basic(optional = false)
@@ -72,6 +76,8 @@ public class Team implements Serializable {
     @JoinColumn(name = "BOSS_EMPLOYEE_ID", referencedColumnName = "USERID")
     @ManyToOne(optional = false)
     private Useremployee bossEmployeeId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "team")
+    private Collection<EmployeeTeam> employeeTeamCollection;
 
     public Team() {
     }
@@ -143,6 +149,15 @@ public class Team implements Serializable {
 
     public void setBossEmployeeId(Useremployee bossEmployeeId) {
         this.bossEmployeeId = bossEmployeeId;
+    }
+
+    @XmlTransient
+    public Collection<EmployeeTeam> getEmployeeTeamCollection() {
+        return employeeTeamCollection;
+    }
+
+    public void setEmployeeTeamCollection(Collection<EmployeeTeam> employeeTeamCollection) {
+        this.employeeTeamCollection = employeeTeamCollection;
     }
 
     @Override

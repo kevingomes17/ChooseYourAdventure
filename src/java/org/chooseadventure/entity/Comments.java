@@ -46,7 +46,7 @@ public class Comments implements Serializable {
     @NotNull
     @Column(name = "ID")
     private BigDecimal id;
-    @Size(max = 1000)
+    @Size(max = 2000)
     @Column(name = "COMMENTTEXT")
     private String commenttext;
     @Basic(optional = false)

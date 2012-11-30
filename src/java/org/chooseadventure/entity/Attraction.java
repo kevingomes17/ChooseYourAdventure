@@ -45,7 +45,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Attraction.findByDefaultNoTickets", query = "SELECT a FROM Attraction a WHERE a.defaultNoTickets = :defaultNoTickets"),
     @NamedQuery(name = "Attraction.findByTimings", query = "SELECT a FROM Attraction a WHERE a.timings = :timings"),
     @NamedQuery(name = "Attraction.findByCommission", query = "SELECT a FROM Attraction a WHERE a.commission = :commission"),
-    @NamedQuery(name = "Attraction.findByDirectorid", query = "SELECT a FROM Attraction a WHERE a.directorid = :directorid"),
     @NamedQuery(name = "Attraction.findByCostperticket", query = "SELECT a FROM Attraction a WHERE a.costperticket = :costperticket"),
     @NamedQuery(name = "Attraction.findByCreatedby", query = "SELECT a FROM Attraction a WHERE a.createdby = :createdby"),
     @NamedQuery(name = "Attraction.findByCreatedon", query = "SELECT a FROM Attraction a WHERE a.createdon = :createdon"),
@@ -66,13 +65,13 @@ public class Attraction implements Serializable {
     private String code;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+    @Size(min = 1, max = 50)
     @Column(name = "NAME")
     private String name;
-    @Size(max = 40)
+    @Size(max = 70)
     @Column(name = "ADDRESS")
     private String address;
-    @Size(max = 200)
+    @Size(max = 2000)
     @Column(name = "DESCRIPTION")
     private String description;
     @Basic(optional = false)
@@ -88,10 +87,6 @@ public class Attraction implements Serializable {
     @NotNull
     @Column(name = "COMMISSION")
     private BigDecimal commission;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "DIRECTORID")
-    private BigInteger directorid;
     @Basic(optional = false)
     @NotNull
     @Column(name = "COSTPERTICKET")
@@ -116,14 +111,21 @@ public class Attraction implements Serializable {
     @Column(name = "MODIFIEDON")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedon;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attraction")
+    private Collection<Discussiontopicbyattraction> discussiontopicbyattractionCollection;
     @OneToMany(mappedBy = "attractionid")
     private Collection<Attractionvisited> attractionvisitedCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attraction")
+    private Collection<Packageattraction> packageattractionCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "attractionid")
     private Collection<Ticketsavailable> ticketsavailableCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "attraction")
     private Collection<Attractionemployee> attractionemployeeCollection;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "attraction")
     private Attractionmanagement attractionmanagement;
+    @JoinColumn(name = "DIRECTORID", referencedColumnName = "USERID")
+    @ManyToOne
+    private Useremployee directorid;
     @JoinColumn(name = "COMPANYID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Company companyid;
@@ -145,14 +147,13 @@ public class Attraction implements Serializable {
         this.id = id;
     }
 
-    public Attraction(BigDecimal id, String code, String name, BigInteger defaultNoTickets, String timings, BigDecimal commission, BigInteger directorid, BigDecimal costperticket, Date createdby, Date createdon, Date modifiedby, Date modifiedon) {
+    public Attraction(BigDecimal id, String code, String name, BigInteger defaultNoTickets, String timings, BigDecimal commission, BigDecimal costperticket, Date createdby, Date createdon, Date modifiedby, Date modifiedon) {
         this.id = id;
         this.code = code;
         this.name = name;
         this.defaultNoTickets = defaultNoTickets;
         this.timings = timings;
         this.commission = commission;
-        this.directorid = directorid;
         this.costperticket = costperticket;
         this.createdby = createdby;
         this.createdon = createdon;
@@ -224,14 +225,6 @@ public class Attraction implements Serializable {
         this.commission = commission;
     }
 
-    public BigInteger getDirectorid() {
-        return directorid;
-    }
-
-    public void setDirectorid(BigInteger directorid) {
-        this.directorid = directorid;
-    }
-
     public BigDecimal getCostperticket() {
         return costperticket;
     }
@@ -273,12 +266,30 @@ public class Attraction implements Serializable {
     }
 
     @XmlTransient
+    public Collection<Discussiontopicbyattraction> getDiscussiontopicbyattractionCollection() {
+        return discussiontopicbyattractionCollection;
+    }
+
+    public void setDiscussiontopicbyattractionCollection(Collection<Discussiontopicbyattraction> discussiontopicbyattractionCollection) {
+        this.discussiontopicbyattractionCollection = discussiontopicbyattractionCollection;
+    }
+
+    @XmlTransient
     public Collection<Attractionvisited> getAttractionvisitedCollection() {
         return attractionvisitedCollection;
     }
 
     public void setAttractionvisitedCollection(Collection<Attractionvisited> attractionvisitedCollection) {
         this.attractionvisitedCollection = attractionvisitedCollection;
+    }
+
+    @XmlTransient
+    public Collection<Packageattraction> getPackageattractionCollection() {
+        return packageattractionCollection;
+    }
+
+    public void setPackageattractionCollection(Collection<Packageattraction> packageattractionCollection) {
+        this.packageattractionCollection = packageattractionCollection;
     }
 
     @XmlTransient
@@ -305,6 +316,14 @@ public class Attraction implements Serializable {
 
     public void setAttractionmanagement(Attractionmanagement attractionmanagement) {
         this.attractionmanagement = attractionmanagement;
+    }
+
+    public Useremployee getDirectorid() {
+        return directorid;
+    }
+
+    public void setDirectorid(Useremployee directorid) {
+        this.directorid = directorid;
     }
 
     public Company getCompanyid() {

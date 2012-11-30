@@ -26,20 +26,20 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author kevingomes17
  */
 @Entity
-@Table(name = "EMPLOYEEBOSS")
+@Table(name = "EMPLOYEE_TEAM")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Employeeboss.findAll", query = "SELECT e FROM Employeeboss e"),
-    @NamedQuery(name = "Employeeboss.findByEmployeeid", query = "SELECT e FROM Employeeboss e WHERE e.employeebossPK.employeeid = :employeeid"),
-    @NamedQuery(name = "Employeeboss.findByBossemployeeid", query = "SELECT e FROM Employeeboss e WHERE e.employeebossPK.bossemployeeid = :bossemployeeid"),
-    @NamedQuery(name = "Employeeboss.findByCreatedby", query = "SELECT e FROM Employeeboss e WHERE e.createdby = :createdby"),
-    @NamedQuery(name = "Employeeboss.findByCreatedon", query = "SELECT e FROM Employeeboss e WHERE e.createdon = :createdon"),
-    @NamedQuery(name = "Employeeboss.findByModifiedby", query = "SELECT e FROM Employeeboss e WHERE e.modifiedby = :modifiedby"),
-    @NamedQuery(name = "Employeeboss.findByModifiedon", query = "SELECT e FROM Employeeboss e WHERE e.modifiedon = :modifiedon")})
-public class Employeeboss implements Serializable {
+    @NamedQuery(name = "EmployeeTeam.findAll", query = "SELECT e FROM EmployeeTeam e"),
+    @NamedQuery(name = "EmployeeTeam.findByEmployeeid", query = "SELECT e FROM EmployeeTeam e WHERE e.employeeTeamPK.employeeid = :employeeid"),
+    @NamedQuery(name = "EmployeeTeam.findByTeamid", query = "SELECT e FROM EmployeeTeam e WHERE e.employeeTeamPK.teamid = :teamid"),
+    @NamedQuery(name = "EmployeeTeam.findByCreatedby", query = "SELECT e FROM EmployeeTeam e WHERE e.createdby = :createdby"),
+    @NamedQuery(name = "EmployeeTeam.findByCreatedon", query = "SELECT e FROM EmployeeTeam e WHERE e.createdon = :createdon"),
+    @NamedQuery(name = "EmployeeTeam.findByModifiedby", query = "SELECT e FROM EmployeeTeam e WHERE e.modifiedby = :modifiedby"),
+    @NamedQuery(name = "EmployeeTeam.findByModifiedon", query = "SELECT e FROM EmployeeTeam e WHERE e.modifiedon = :modifiedon")})
+public class EmployeeTeam implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    protected EmployeebossPK employeebossPK;
+    protected EmployeeTeamPK employeeTeamPK;
     @Basic(optional = false)
     @NotNull
     @Column(name = "CREATEDBY")
@@ -58,38 +58,38 @@ public class Employeeboss implements Serializable {
     @Column(name = "MODIFIEDON")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedon;
-    @JoinColumn(name = "BOSSEMPLOYEEID", referencedColumnName = "USERID", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Useremployee useremployee;
     @JoinColumn(name = "EMPLOYEEID", referencedColumnName = "USERID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Useremployee useremployee1;
+    private Useremployee useremployee;
+    @JoinColumn(name = "TEAMID", referencedColumnName = "ID", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Team team;
 
-    public Employeeboss() {
+    public EmployeeTeam() {
     }
 
-    public Employeeboss(EmployeebossPK employeebossPK) {
-        this.employeebossPK = employeebossPK;
+    public EmployeeTeam(EmployeeTeamPK employeeTeamPK) {
+        this.employeeTeamPK = employeeTeamPK;
     }
 
-    public Employeeboss(EmployeebossPK employeebossPK, BigInteger createdby, Date createdon, BigInteger modifiedby, Date modifiedon) {
-        this.employeebossPK = employeebossPK;
+    public EmployeeTeam(EmployeeTeamPK employeeTeamPK, BigInteger createdby, Date createdon, BigInteger modifiedby, Date modifiedon) {
+        this.employeeTeamPK = employeeTeamPK;
         this.createdby = createdby;
         this.createdon = createdon;
         this.modifiedby = modifiedby;
         this.modifiedon = modifiedon;
     }
 
-    public Employeeboss(BigInteger employeeid, BigInteger bossemployeeid) {
-        this.employeebossPK = new EmployeebossPK(employeeid, bossemployeeid);
+    public EmployeeTeam(BigInteger employeeid, BigInteger teamid) {
+        this.employeeTeamPK = new EmployeeTeamPK(employeeid, teamid);
     }
 
-    public EmployeebossPK getEmployeebossPK() {
-        return employeebossPK;
+    public EmployeeTeamPK getEmployeeTeamPK() {
+        return employeeTeamPK;
     }
 
-    public void setEmployeebossPK(EmployeebossPK employeebossPK) {
-        this.employeebossPK = employeebossPK;
+    public void setEmployeeTeamPK(EmployeeTeamPK employeeTeamPK) {
+        this.employeeTeamPK = employeeTeamPK;
     }
 
     public BigInteger getCreatedby() {
@@ -132,29 +132,29 @@ public class Employeeboss implements Serializable {
         this.useremployee = useremployee;
     }
 
-    public Useremployee getUseremployee1() {
-        return useremployee1;
+    public Team getTeam() {
+        return team;
     }
 
-    public void setUseremployee1(Useremployee useremployee1) {
-        this.useremployee1 = useremployee1;
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (employeebossPK != null ? employeebossPK.hashCode() : 0);
+        hash += (employeeTeamPK != null ? employeeTeamPK.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Employeeboss)) {
+        if (!(object instanceof EmployeeTeam)) {
             return false;
         }
-        Employeeboss other = (Employeeboss) object;
-        if ((this.employeebossPK == null && other.employeebossPK != null) || (this.employeebossPK != null && !this.employeebossPK.equals(other.employeebossPK))) {
+        EmployeeTeam other = (EmployeeTeam) object;
+        if ((this.employeeTeamPK == null && other.employeeTeamPK != null) || (this.employeeTeamPK != null && !this.employeeTeamPK.equals(other.employeeTeamPK))) {
             return false;
         }
         return true;
@@ -162,7 +162,7 @@ public class Employeeboss implements Serializable {
 
     @Override
     public String toString() {
-        return "org.chooseadventure.entity.Employeeboss[ employeebossPK=" + employeebossPK + " ]";
+        return "org.chooseadventure.entity.EmployeeTeam[ employeeTeamPK=" + employeeTeamPK + " ]";
     }
     
 }

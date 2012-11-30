@@ -26,20 +26,20 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author kevingomes17
  */
 @Entity
-@Table(name = "ATTRACTIONEMPLOYEE")
+@Table(name = "PACKAGEATTRACTION")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Attractionemployee.findAll", query = "SELECT a FROM Attractionemployee a"),
-    @NamedQuery(name = "Attractionemployee.findByEmployeeid", query = "SELECT a FROM Attractionemployee a WHERE a.attractionemployeePK.employeeid = :employeeid"),
-    @NamedQuery(name = "Attractionemployee.findByAttractionid", query = "SELECT a FROM Attractionemployee a WHERE a.attractionemployeePK.attractionid = :attractionid"),
-    @NamedQuery(name = "Attractionemployee.findByCreatedby", query = "SELECT a FROM Attractionemployee a WHERE a.createdby = :createdby"),
-    @NamedQuery(name = "Attractionemployee.findByCreatedon", query = "SELECT a FROM Attractionemployee a WHERE a.createdon = :createdon"),
-    @NamedQuery(name = "Attractionemployee.findByModifiedby", query = "SELECT a FROM Attractionemployee a WHERE a.modifiedby = :modifiedby"),
-    @NamedQuery(name = "Attractionemployee.findByModifiedon", query = "SELECT a FROM Attractionemployee a WHERE a.modifiedon = :modifiedon")})
-public class Attractionemployee implements Serializable {
+    @NamedQuery(name = "Packageattraction.findAll", query = "SELECT p FROM Packageattraction p"),
+    @NamedQuery(name = "Packageattraction.findByPackageid", query = "SELECT p FROM Packageattraction p WHERE p.packageattractionPK.packageid = :packageid"),
+    @NamedQuery(name = "Packageattraction.findByAttractionid", query = "SELECT p FROM Packageattraction p WHERE p.packageattractionPK.attractionid = :attractionid"),
+    @NamedQuery(name = "Packageattraction.findByCreatedby", query = "SELECT p FROM Packageattraction p WHERE p.createdby = :createdby"),
+    @NamedQuery(name = "Packageattraction.findByCreatedon", query = "SELECT p FROM Packageattraction p WHERE p.createdon = :createdon"),
+    @NamedQuery(name = "Packageattraction.findByModifiedby", query = "SELECT p FROM Packageattraction p WHERE p.modifiedby = :modifiedby"),
+    @NamedQuery(name = "Packageattraction.findByModifiedon", query = "SELECT p FROM Packageattraction p WHERE p.modifiedon = :modifiedon")})
+public class Packageattraction implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    protected AttractionemployeePK attractionemployeePK;
+    protected PackageattractionPK packageattractionPK;
     @Basic(optional = false)
     @NotNull
     @Column(name = "CREATEDBY")
@@ -58,38 +58,38 @@ public class Attractionemployee implements Serializable {
     @Column(name = "MODIFIEDON")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedon;
-    @JoinColumn(name = "EMPLOYEEID", referencedColumnName = "USERID", insertable = false, updatable = false)
+    @JoinColumn(name = "PACKAGEID", referencedColumnName = "ID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Useremployee useremployee;
+    private Packages packages;
     @JoinColumn(name = "ATTRACTIONID", referencedColumnName = "ID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Attraction attraction;
 
-    public Attractionemployee() {
+    public Packageattraction() {
     }
 
-    public Attractionemployee(AttractionemployeePK attractionemployeePK) {
-        this.attractionemployeePK = attractionemployeePK;
+    public Packageattraction(PackageattractionPK packageattractionPK) {
+        this.packageattractionPK = packageattractionPK;
     }
 
-    public Attractionemployee(AttractionemployeePK attractionemployeePK, BigInteger createdby, Date createdon, BigInteger modifiedby, Date modifiedon) {
-        this.attractionemployeePK = attractionemployeePK;
+    public Packageattraction(PackageattractionPK packageattractionPK, BigInteger createdby, Date createdon, BigInteger modifiedby, Date modifiedon) {
+        this.packageattractionPK = packageattractionPK;
         this.createdby = createdby;
         this.createdon = createdon;
         this.modifiedby = modifiedby;
         this.modifiedon = modifiedon;
     }
 
-    public Attractionemployee(BigInteger employeeid, BigInteger attractionid) {
-        this.attractionemployeePK = new AttractionemployeePK(employeeid, attractionid);
+    public Packageattraction(BigInteger packageid, BigInteger attractionid) {
+        this.packageattractionPK = new PackageattractionPK(packageid, attractionid);
     }
 
-    public AttractionemployeePK getAttractionemployeePK() {
-        return attractionemployeePK;
+    public PackageattractionPK getPackageattractionPK() {
+        return packageattractionPK;
     }
 
-    public void setAttractionemployeePK(AttractionemployeePK attractionemployeePK) {
-        this.attractionemployeePK = attractionemployeePK;
+    public void setPackageattractionPK(PackageattractionPK packageattractionPK) {
+        this.packageattractionPK = packageattractionPK;
     }
 
     public BigInteger getCreatedby() {
@@ -124,12 +124,12 @@ public class Attractionemployee implements Serializable {
         this.modifiedon = modifiedon;
     }
 
-    public Useremployee getUseremployee() {
-        return useremployee;
+    public Packages getPackages() {
+        return packages;
     }
 
-    public void setUseremployee(Useremployee useremployee) {
-        this.useremployee = useremployee;
+    public void setPackages(Packages packages) {
+        this.packages = packages;
     }
 
     public Attraction getAttraction() {
@@ -143,18 +143,18 @@ public class Attractionemployee implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (attractionemployeePK != null ? attractionemployeePK.hashCode() : 0);
+        hash += (packageattractionPK != null ? packageattractionPK.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Attractionemployee)) {
+        if (!(object instanceof Packageattraction)) {
             return false;
         }
-        Attractionemployee other = (Attractionemployee) object;
-        if ((this.attractionemployeePK == null && other.attractionemployeePK != null) || (this.attractionemployeePK != null && !this.attractionemployeePK.equals(other.attractionemployeePK))) {
+        Packageattraction other = (Packageattraction) object;
+        if ((this.packageattractionPK == null && other.packageattractionPK != null) || (this.packageattractionPK != null && !this.packageattractionPK.equals(other.packageattractionPK))) {
             return false;
         }
         return true;
@@ -162,7 +162,7 @@ public class Attractionemployee implements Serializable {
 
     @Override
     public String toString() {
-        return "org.chooseadventure.entity.Attractionemployee[ attractionemployeePK=" + attractionemployeePK + " ]";
+        return "org.chooseadventure.entity.Packageattraction[ packageattractionPK=" + packageattractionPK + " ]";
     }
     
 }

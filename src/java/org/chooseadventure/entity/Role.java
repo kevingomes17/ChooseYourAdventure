@@ -52,7 +52,7 @@ public class Role implements Serializable {
     private BigDecimal id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+    @Size(min = 1, max = 50)
     @Column(name = "NAME")
     private String name;
     @Size(max = 200)
