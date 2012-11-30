@@ -50,5 +50,5 @@
     <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager"/>    
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
-
+    
 </beans>

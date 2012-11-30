@@ -4,10 +4,6 @@
  */
 package org.chooseadventure.service;
 
-import javax.enterprise.inject.Model;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  *
  * @author kevingomes17

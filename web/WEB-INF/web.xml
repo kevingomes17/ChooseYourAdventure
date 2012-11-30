@@ -23,8 +23,9 @@
     </session-config>
     <welcome-file-list>
         <welcome-file>redirect.jsp</welcome-file>
-    </welcome-file-list>    
-        
+    </welcome-file-list>
+    
+    
     <login-config>
         <auth-method>FORM</auth-method>
         <form-login-config>
@@ -33,6 +34,23 @@
         </form-login-config>
     </login-config>
     <security-role>
-            <role-name>authn_user</role-name>
+        <role-name>authn_user</role-name>
     </security-role>
+    
+    
+    <!-- Spring Security -->
+    <!--
+    <authentication-provider>
+        <jdbc-user-service data-source-ref="dataSource" id="userDetailsService"/>
+    </authentication-provider>
+    
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy         </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>    
+    -->
 </web-app>
