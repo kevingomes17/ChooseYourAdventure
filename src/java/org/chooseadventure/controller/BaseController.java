@@ -38,7 +38,7 @@ public class BaseController {
     protected String TemplateJson = "TemplateJson"; //JSON template
     protected String TemplateSubForm = "TemplateSubForm"; //Sub-form template
     
-    protected String HomeUrl = "/user/profile.htm";
+    protected String HomeUrl = "/attraction/home.htm";
     protected String LoginUrl = "/user/login.htm";
     protected String LogoutUrl = "/user/logout.htm";
     
