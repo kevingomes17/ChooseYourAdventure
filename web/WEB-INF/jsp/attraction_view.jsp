@@ -14,6 +14,11 @@
         Hours of Operation: ${attraction.getTimings()}
     </div>
     <br>
+    <div id="hours">
+        Description<br>
+        ${attraction.getDescription()}
+    </div>
+    <br>
     <div id="ticketcost">
         Ticket Cost: $${attraction.getCostperticket()}
     </div>
