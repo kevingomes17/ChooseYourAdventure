@@ -5,8 +5,10 @@
 package org.chooseadventure.service;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 //import javax.management.j2ee.statistics.JDBCConnectionPoolStats;
 import javax.persistence.EntityManager;
@@ -36,7 +38,7 @@ public class DiscussionDao extends BaseDao {
             TypedQuery<Discussiontopicbyattraction> dTopicByAttQuery = em.createNamedQuery("Discussiontopicbyattraction.findByAttractionid", Discussiontopicbyattraction.class);
             dTopicByAttQuery.setParameter("attractionid", new BigDecimal(attractionId));
             List<Discussiontopicbyattraction> dTopicsByAtt = dTopicByAttQuery.getResultList();
-            
+
             //get discussion topic in each Discussiontopicbyattraction and add to list
             List<Discussiontopic> dTopic = new ArrayList< Discussiontopic>();
 
@@ -46,39 +48,73 @@ public class DiscussionDao extends BaseDao {
                 }
             }
             //return list
-            return dTopic;    
+            return dTopic;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-    
-    public List<Discussionthread> getDiscussionThreadsFromTopic(String attractionId, String topicId){
-        try{
-            List<Discussiontopic> dTopic = getDiscussionTopicsbyAtt(attractionId);
-            List<Discussionthread> threads = (List)dTopic.get(Integer.parseInt(topicId)).getDiscussionthreadCollection();
+
+    public List<Discussionthread> getDiscussionThreadsFromTopic(String topicId) {
+        try {
+            TypedQuery<Discussiontopic> dTopics = em.createNamedQuery("Discussiontopic.findById", Discussiontopic.class);
+            dTopics.setParameter("topicId", new BigDecimal(topicId));
+            Discussiontopic topic = dTopics.getSingleResult();
+
+            List<Discussionthread> threads = (List) topic.getDiscussionthreadCollection();
+
             return threads;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-    
-    public List<Discussionthreadcomment> getCommentsFromThread(String attractionId, String topicId, String threadId){
-        try{
-            List<Discussionthread> threads = getDiscussionThreadsFromTopic(attractionId, topicId);
-            List<Discussionthreadcomment> comments = (List)threads.get(Integer.parseInt(threadId)).getDiscussionthreadcommentCollection();
+
+    public List<Discussionthreadcomment> getCommentsFromThread(String threadId) {
+        try {
+            TypedQuery<Discussionthread> dTthreadQuery = em.createNamedQuery("Discussionthread.findById", Discussionthread.class);
+            dTthreadQuery.setParameter("threadId", new BigDecimal(threadId));
+            Discussionthread thread = dTthreadQuery.getSingleResult();
+            List<Discussionthreadcomment> comments = (List) thread.getDiscussionthreadcommentCollection();
             return comments;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        
+
+
         return null;
     }
-    
+
     //new thread
-    public void insertThread(){
-        
+    public Boolean insertThread(HashMap hm) {
+
+        try {
+            
+            Discussionthread thread = new Discussionthread();
+
+            //get topic
+            TypedQuery<Discussiontopic> dtopicQuery = em.createNamedQuery("Discussiontopic.findById", Discussiontopic.class);
+            dtopicQuery.setParameter("topicId", new BigDecimal(hm.get("topic").toString()));
+            Discussiontopic topic = dtopicQuery.getSingleResult();
+
+            Userbase user = getUserObj(hm.get("user").toString());
+            
+            
+            Date date = new Date();
+            thread.setDescription(hm.get("description").toString());
+            thread.setTitle(hm.get("title").toString());
+            thread.setTopicid(topic);
+            thread.setCreatedon(date);
+            thread.setModifiedon(date);
+            thread.setUserid(user);
+            thread.setCreatedby(user.getId().toBigInteger());
+            thread.setModifiedby(user.getId().toBigInteger());
+            
+            return daoService.insert(thread);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 }

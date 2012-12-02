@@ -94,7 +94,7 @@ public class AttractionController extends BaseController {
         String topicId = Utils.GetValIfNull(request.getParameter("topicId"), "0");
         String threadId = Utils.GetValIfNull(request.getParameter("threadId"), "0");
         
-        List<Discussionthreadcomment> comments = discussionDao.getCommentsFromThread(attId, topicId, threadId);
+        List<Discussionthreadcomment> comments = discussionDao.getCommentsFromThread( threadId);
         model.addAttribute("comments", comments);
         model.addAttribute("Filename", "attraction_comments.jsp");
         return TemplateSubForm;        
