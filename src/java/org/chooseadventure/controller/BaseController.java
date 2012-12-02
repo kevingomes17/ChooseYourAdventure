@@ -68,6 +68,7 @@ public class BaseController {
         Errors.clear();
     }
     
+    //returning user email
     protected String getUserIdFromSession(HttpServletRequest request) {
         HttpSession sess = request.getSession(true);
         String username = "";
