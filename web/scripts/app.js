@@ -76,11 +76,74 @@ var Attraction = {
             $.ajax({
                 method: 'GET',
                 url: urlStr,
-                success: function(response) { commentsDiv.html(response); },
-                failure: function() { commentsDiv.html('Unable to load comments. Try again!'); }
+                success: function(response) {commentsDiv.html(response);},
+                failure: function() {commentsDiv.html('Unable to load comments. Try again!');}
             });
             
             return false;
         });
+        
+        $('#discussion-topics-wrapper .add-thread').click(function() {
+            AppDialog.showDialog(this.href, 'large', 'Add Thread');            
+            return false;
+        });
     }
 };
+
+var AppDialog = {
+    dialogId: 'dialog-form',
+    dimensions: {
+        'default': {width: 300, height: 200},
+        'small': {width: 300, height: 200},
+        'medium': {width: 600, height: 400},
+        'large': {width: 900, height: 600}
+    },
+    
+    showDialog: function(urlStr, dimension, title) {
+        var AD = AppDialog;
+        
+        $.ajax({
+            method: 'GET',
+            url: urlStr,
+            success: function(response) {
+                //console.log(AppDialog.dialogId);
+                $('#'+AD.dialogId).css('display', 'block').html(response);
+                AD._openDialog(dimension, title);
+                
+                //Initialize form validation.
+                //$('#'+AD.dialogId+' form').validate();
+            },
+            failure: function() {
+                $('#'+AD.dialogId).html('Unable to load form. Please try again!');
+            }
+        });
+    },
+    
+    _openDialog: function(dim, title) {        
+        var AD = AppDialog;        
+        
+        var width = AD.dimensions[dim].width;
+        var height = AD.dimensions[dim].height;        
+        
+        
+        $('#'+AD.dialogId).dialog({
+            autoOpen: true,
+            height: height,
+            width: width,
+            modal: true,
+            title: title,
+            buttons: {
+                "Save": function() {
+                    
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    }
+};
+
+$(function() {
+    $('.button').button();
+});

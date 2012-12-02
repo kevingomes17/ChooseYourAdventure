@@ -39,7 +39,7 @@
                     </tr>
                 </table>
 
-                <input type="submit" value="View"></input>
+                <input type="submit" class="button" value="View"></input>
 
             </form>
         </td>

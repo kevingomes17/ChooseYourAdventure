@@ -67,6 +67,7 @@ public class DiscussionDao extends BaseDao {
     public List<Discussionthreadcomment> getCommentsFromThread(String attractionId, String topicId, String threadId){
         try{
             List<Discussionthread> threads = getDiscussionThreadsFromTopic(attractionId, topicId);
+            
             List<Discussionthreadcomment> comments = (List)threads.get(Integer.parseInt(threadId)).getDiscussionthreadcommentCollection();
             return comments;
         }catch (Exception e){
