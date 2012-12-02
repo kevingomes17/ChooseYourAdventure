@@ -84,7 +84,7 @@ var Attraction = {
         });
         
         $('#discussion-topics-wrapper .add-thread').click(function() {
-            AppDialog.showDialog(this.href, 'large', 'Add Thread');            
+            AppDialog.showDialog(this.href, 'medium', 'Add Thread');            
             return false;
         });
     }
@@ -111,7 +111,7 @@ var AppDialog = {
                 AD._openDialog(dimension, title);
                 
                 //Initialize form validation.
-                //$('#'+AD.dialogId+' form').validate();
+                $('#'+AD.dialogId+' form').validate();
             },
             failure: function() {
                 $('#'+AD.dialogId).html('Unable to load form. Please try again!');
@@ -133,14 +133,66 @@ var AppDialog = {
             modal: true,
             title: title,
             buttons: {
-                "Save": function() {
-                    
-                },
+                "Save": function() { },
                 "Cancel": function() {
                     $(this).dialog("close");
                 }
             }
         });
+        
+        AppDialog._enableSave();
+    },
+    
+    _submitForm: function() {
+        var AD = AppDialog;
+        AD._disableSave();
+        
+        var form = $('#'+AD.dialogId).find('form');        
+        var url = form.attr('action');
+        
+        $.post(url, form.serialize(), function(response) {
+            //alert(response.success);
+            if(response.success == 'true') {
+                alert('Saved successfully. '+response.message);
+                AppDialog.closeDialog();
+            } else {
+                alert('Unable to save. '+response.message);
+                AppDialog._enableSave();
+            }            
+        }, 'json');
+    },
+    
+    _disableSave: function() {
+        var AD = AppDialog;
+        var buttons = $('#'+AD.dialogId).dialog('option', 'buttons', [
+            {
+                text: 'Saving..',
+                click: function() { }
+            }
+        ]);
+    },
+    
+    _enableSave: function() {
+        var AD = AppDialog;
+        var buttons = $('#'+AD.dialogId).dialog('option', 'buttons', [
+            {
+                text: 'Save',
+                click: function() {
+                    var AD = AppDialog;                    
+                    if($(this).find('form').valid()) {
+                        AD._submitForm();
+                    }
+                }
+            },
+            {
+                text: 'Close',
+                click: function() {$(this).dialog('close');}
+            }
+        ]);
+    },
+    
+    closeDialog: function() {
+        $('#'+AppDialog.dialogId).dialog('close');
     }
 };
 

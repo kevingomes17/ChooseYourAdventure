@@ -5,7 +5,9 @@
 package org.chooseadventure.controller;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import javax.ws.rs.Produces;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.chooseadventure.service.*;
 import org.chooseadventure.entity.*;
 import org.chooseadventure.utils.Utils;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -51,13 +54,21 @@ public class DiscussionController extends BaseController {
         return TemplateSubForm;
     }
 
+    
+    @Produces({"application/json"})
     @RequestMapping(value = "/new_thread", method = RequestMethod.POST)
     public String insertThread_submitHandler(HttpServletRequest request, HttpServletResponse response, Model model) {
+                
         String title = Utils.GetValIfNull(request.getParameter("t_title"), "0");
         String description = Utils.GetValIfNull(request.getParameter("t_description"), "0");
 
+        Boolean flag = false;
         
-
-        return null;
+        HashMap<String,String> jresponse = new HashMap<String,String>();
+        jresponse.put("success", flag.toString());
+        jresponse.put("message", "Not implemented yet!");
+        
+        model.addAttribute("response", toJSON(jresponse));
+        return TemplateJson;
     }
 }
