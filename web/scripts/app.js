@@ -65,5 +65,22 @@ var Attraction = {
             
             return flag;
         });
+    },
+    
+    //Initializes the attraction view details page.
+    initView: function() {
+        $('#discussion-topics-wrapper .discussion-thread-title').click(function() {
+            var commentsDiv = $(this).next().html('Loading comments...');
+            var urlStr = $(this).attr('href');
+            
+            $.ajax({
+                method: 'GET',
+                url: urlStr,
+                success: function(response) { commentsDiv.html(response); },
+                failure: function() { commentsDiv.html('Unable to load comments. Try again!'); }
+            });
+            
+            return false;
+        });
     }
 };

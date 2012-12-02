@@ -1,28 +1,49 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div>
-    <div id="attractionname">
-        <h2>${attraction.getName()}</h2>
-        <br>
-    </div>
-    <div id="attractionaddress">
-        Address: <br>
+<div id="view-attraction-wrapper">
+    <div class="attraction-address">
+        <strong>Address:</strong>
         ${attraction.getAddress()}
     </div>
-    <br>
-    <div id="hours">
-        Hours of Operation: ${attraction.getTimings()}
+    <div class="hours">
+        <strong>Hours of Operation:</strong> ${attraction.getTimings()}
     </div>
-    <br>
-    <div id="hours">
-        Description<br>
+    <div class="description">
+        <strong>Description:</strong>
         ${attraction.getDescription()}
     </div>
-    <br>
     <div id="ticketcost">
-        Ticket Cost: $${attraction.getCostperticket()}
+        <strong>Ticket Cost:</strong> $${attraction.getCostperticket()}
     </div>
     <div ></div>
 </div>
-<br><br>
-<li><a href="${BasePath}/discussion/attraction_topics.htm?attraction=${attraction.getId()}">View discussions on ${attraction.getName()}</a>
+<br>
+
+<c:if test="${not empty discussions}">
+    <h4>Discussion Topics/Threads</h4>
+    <div id="discussion-topics-wrapper">
+    <ul>
+        <c:forEach items="${discussions}" var="dobj">
+            <li>
+                ${dobj.getTitle()}
+                <c:if test="${not empty dThreads.get(dobj.getId().toString())}">
+                    <ol>
+                        <c:forEach items="${dThreads.get(dobj.getId().toString())}" var="thobj">
+                            <li>
+                                <a href="${BasePath}/attraction/attraction-comments.htm?attractionId=${attraction.getId()}&topicId=${dobj.getId()}&threadId=${thobj.getId()}" class="discussion-thread-title">${thobj.getTitle()}</a>
+                                <div class="thread-comments"></div>
+                            </li>
+                        </c:forEach>
+                    </ol>
+                </c:if>
+            </li>            
+        </c:forEach>
+    </ul>
+    </div>
+</c:if>
+    
+<script type="text/javascript">
+    $(function() {
+        Attraction.initView();
+    });
+</script>    
