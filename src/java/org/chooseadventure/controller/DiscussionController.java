@@ -5,8 +5,6 @@
 package org.chooseadventure.controller;
 
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,17 +55,9 @@ public class DiscussionController extends BaseController {
     public String insertThread_submitHandler(HttpServletRequest request, HttpServletResponse response, Model model) {
         String title = Utils.GetValIfNull(request.getParameter("t_title"), "0");
         String description = Utils.GetValIfNull(request.getParameter("t_description"), "0");
-        String topicId = Utils.GetValIfNull(request.getParameter("topicId"), "0");
-        String email = request.getUserPrincipal().getName();
+
         
-        HashMap hm = new HashMap();
-        hm.put("title", title);
-        hm.put("description", description);
-        hm.put("topicId", topicId);
-        hm.put("user", email);
-        
-        discussionDao.insertThread(hm);
-        
+
         return null;
     }
 }
