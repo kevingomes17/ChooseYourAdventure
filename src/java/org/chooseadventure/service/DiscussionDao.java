@@ -52,4 +52,28 @@ public class DiscussionDao extends BaseDao {
         }
         return null;
     }
+    
+    public List<Discussionthread> getDiscussionThreadsFromTopic(String attractionId, String topicId){
+        try{
+            List<Discussiontopic> dTopic = getDiscussionTopicsbyAtt(attractionId);
+            List<Discussionthread> threads = (List)dTopic.get(Integer.parseInt(topicId)).getDiscussionthreadCollection();
+            return threads;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public List<Discussionthreadcomment> getCommentsFromThread(String attractionId, String topicId, String threadId){
+        try{
+            List<Discussionthread> threads = getDiscussionThreadsFromTopic(attractionId, topicId);
+            List<Discussionthreadcomment> comments = (List)threads.get(Integer.parseInt(threadId)).getDiscussionthreadcommentCollection();
+            return comments;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        
+        
+        return null;
+    }
 }
