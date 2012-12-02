@@ -47,7 +47,7 @@ public class DiscussionController extends BaseController {
     @RequestMapping(value = "/new_thread", method = RequestMethod.GET)
     public String insertThread(HttpServletRequest request, HttpServletResponse response, Model model) {
         String topicId = Utils.GetValIfNull(request.getParameter("topicId"), "0");
-
+        System.out.println("topic id = " + topicId);
         model.addAttribute("topicId", topicId);
         setModelParameters(request, model, "new_thread.jsp", "New Thread");
 

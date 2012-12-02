@@ -94,11 +94,12 @@ public class DiscussionDao extends BaseDao {
 
             //get topic
             TypedQuery<Discussiontopic> dtopicQuery = em.createNamedQuery("Discussiontopic.findById", Discussiontopic.class);
-            dtopicQuery.setParameter("topicId", new BigDecimal(hm.get("topicId").toString()));
+            dtopicQuery.setParameter("id", new BigDecimal(hm.get("topicId").toString()));
             Discussiontopic topic = dtopicQuery.getSingleResult();
 
             Userbase user = getUserObj(hm.get("user").toString());
             
+            System.out.println("User name = " + user.getDisplayname());
             
             Date date = new Date();
             thread.setDescription(hm.get("description").toString());
@@ -107,10 +108,11 @@ public class DiscussionDao extends BaseDao {
             thread.setCreatedon(date);
             thread.setModifiedon(date);
             thread.setUserid(user);
-            thread.setCreatedby(user.getId().toBigInteger());
+            thread.setCreatedby(user.getId().toBigIntegerExact());
             thread.setModifiedby(user.getId().toBigInteger());
             
             return daoService.insert(thread);
+            
         } catch (Exception e) {
             e.printStackTrace();
             return false;

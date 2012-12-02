@@ -26,7 +26,7 @@ public class BaseDao {
     
     public Userbase getUserObj(String email){
         try {
-            TypedQuery<Userbase> userQuery= em.createNamedQuery("Userbase.findById", Userbase.class);
+            TypedQuery<Userbase> userQuery= em.createNamedQuery("Userbase.findByEmail", Userbase.class);
             userQuery.setParameter("email", email);
             Userbase user = userQuery.getSingleResult();
             return user;
