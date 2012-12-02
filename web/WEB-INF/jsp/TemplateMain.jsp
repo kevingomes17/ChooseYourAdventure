@@ -45,5 +45,7 @@
                 ChooseYourAdventure.com &copy; 2012.                
             </div>
         </div>
+                    
+                    <div id="dialog-form" style="display: none;"></div>
     </body>
 </html>
