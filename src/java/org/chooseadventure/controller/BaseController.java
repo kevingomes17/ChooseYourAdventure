@@ -84,7 +84,7 @@ public class BaseController {
         return username;
     }
     
-    protected String toJSON(ArrayList<HashMap<String,String>> results) {
+    protected String toJSON(HashMap<String,String> results) {
         ObjectMapper mapper = new ObjectMapper();
         String json = "";
         try {            
@@ -96,36 +96,15 @@ public class BaseController {
         return json;
     }
     
-    protected LinkedHashMap<String,String> getSemesters() {
-        LinkedHashMap<String,String> sem = new LinkedHashMap<String,String>();
-        sem.put("10","Fall");
-        sem.put("20","Spring");
-        sem.put("30","Summer");
-        sem.put("30-10","Summer-Fall");
-        sem.put("10-20","Fall-Spring");        
-        sem.put("30-10-20","Summer-Fall-Spring");        
-        return sem;
-    }
-    
-    protected LinkedHashMap<String,String> getSemesters(String semester, int year) {
-        LinkedHashMap<String,String> sem = new LinkedHashMap<String,String>();
-        if("10".equals(semester)) {
-            sem.put("10-"+year, "Fall "+year);
-        } else if("20".equals(semester)) {
-            sem.put("20-"+year, "Spring "+year);
-        } else if("30".equals(semester)) {
-            sem.put("30-"+year, "Summer "+year);
-        } else if("30-10".equals(semester)) {
-            sem.put("30-"+year, "Summer "+year);
-            sem.put("10-"+year, "Fall "+year);
-        } else if("10-20".equals(semester)) {
-            sem.put("10-"+year, "Fall "+year);
-            sem.put("20-"+(year+1), "Spring "+(year+1));
-        } else if("30-10-20".equals(semester)) {
-            sem.put("30-"+year, "Summer "+year);
-            sem.put("10-"+year, "Fall "+year);
-            sem.put("20-"+(year+1), "Spring "+(year+1));
-        } 
-        return sem;
+    protected String toJSON(ArrayList<HashMap<String,String>> results) {
+        ObjectMapper mapper = new ObjectMapper();
+        String json = "";
+        try {            
+            json = mapper.writeValueAsString(results);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        return json;
     }
 }
