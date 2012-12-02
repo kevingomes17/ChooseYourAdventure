@@ -25,7 +25,7 @@
     <ul>
         <c:forEach items="${discussions}" var="dobj">
             <li>
-                ${dobj.getTitle()} <a class="add-thread" href="${BasePath}/discussion/new_thread.htm?topicId=${dobj.getId()}">Add Thread</a>
+                ${dobj.getTitle()}
                 <c:if test="${not empty dThreads.get(dobj.getId().toString())}">
                     <ol>
                         <c:forEach items="${dThreads.get(dobj.getId().toString())}" var="thobj">
