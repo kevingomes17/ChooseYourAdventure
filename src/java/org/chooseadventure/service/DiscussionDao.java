@@ -76,4 +76,9 @@ public class DiscussionDao extends BaseDao {
         
         return null;
     }
+    
+    //new thread
+    public void insertThread(){
+        
+    }
 }

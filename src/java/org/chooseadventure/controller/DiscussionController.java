@@ -22,21 +22,42 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author root
  */
 @Controller
-public class DiscussionController  extends BaseController{
+public class DiscussionController extends BaseController {
+
     @Autowired
     private DiscussionDao discussionDao;
-    
-    @RequestMapping(value="/attraction_topics", method= RequestMethod.GET)
-    public String dTopicsByAttractionView(HttpServletRequest request, HttpServletResponse response, Model model){
-        
+
+    @RequestMapping(value = "/attraction_topics", method = RequestMethod.GET)
+    public String dTopicsByAttractionView(HttpServletRequest request, HttpServletResponse response, Model model) {
+
         //take city from request pass as paremeter
         String atractionid = request.getParameter("attraction");
-        
+
         List<Discussiontopic> dTopics = discussionDao.getDiscussionTopicsbyAtt(atractionid);
         System.out.println("topic list size = " + dTopics.size());
         model.addAttribute("discussionTopics", dTopics);
         model.addAttribute("Filename", "attraction_topics.jsp");
-        
+
         return TemplateSubForm;
+    }
+
+    @RequestMapping(value = "/new_thread", method = RequestMethod.GET)
+    public String insertThread(HttpServletRequest request, HttpServletResponse response, Model model) {
+        String topicId = Utils.GetValIfNull(request.getParameter("topicId"), "0");
+
+        model.addAttribute("topicId", topicId);
+        setModelParameters(request, model, "new_thread.jsp", "New Thread");
+
+        return TemplateSubForm;
+    }
+
+    @RequestMapping(value = "/new_thread", method = RequestMethod.POST)
+    public String insertThread_submitHandler(HttpServletRequest request, HttpServletResponse response, Model model) {
+        String title = Utils.GetValIfNull(request.getParameter("t_title"), "0");
+        String description = Utils.GetValIfNull(request.getParameter("t_description"), "0");
+
+        
+
+        return null;
     }
 }
