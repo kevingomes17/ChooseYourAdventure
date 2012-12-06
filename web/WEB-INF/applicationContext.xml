@@ -51,4 +51,17 @@
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
     
+    <!--
+    <security:http auto-config="true">
+        <security:intercept-url pattern="/account.jsp" access="ROLE_USER"/>
+        <security:intercept-url pattern="/admin.jsp" access="ROLE_ADMIN"/>
+        <security:form-login login-page="/user/login.htm" authentication-failure-url="/user/login.htm?error=true" />
+    </security:http>
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="userAuthenticationService">
+       
+        </security:authentication-provider>
+    </security:authentication-manager>
+    -->
+    
 </beans>
