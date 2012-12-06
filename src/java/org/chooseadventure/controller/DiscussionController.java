@@ -53,6 +53,17 @@ public class DiscussionController extends BaseController {
 
         return TemplateSubForm;
     }
+    
+    @RequestMapping(value = "/new_comment", method = RequestMethod.GET)
+    public String insertComment(HttpServletRequest request, HttpServletResponse response, Model model) {
+        String threadId = Utils.GetValIfNull(request.getParameter("threadId"), "0");
+        System.out.println("thread id 1= " + threadId);
+        model.addAttribute("threadId", threadId);
+        setModelParameters(request, model, "new_comment.jsp", "New Comment");
+
+        return TemplateSubForm;
+    }
+    
 
     @Produces({"application/json"})
     @RequestMapping(value = "/new_thread", method = RequestMethod.POST)
@@ -81,4 +92,33 @@ public class DiscussionController extends BaseController {
         model.addAttribute("response", toJSON(jresponse));
         return TemplateJson;
     }
+    
+    @Produces({"application/json"})
+    @RequestMapping(value = "/new_comment", method = RequestMethod.POST)
+    public String insertcomment_submitHandler(HttpServletRequest request, HttpServletResponse response, Model model) {
+        String title = Utils.GetValIfNull(request.getParameter("t_title"), "0");
+        String description = Utils.GetValIfNull(request.getParameter("t_description"), "0");
+        String threadId = Utils.GetValIfNull(request.getParameter("threadId"), "0");
+        String email = request.getUserPrincipal().getName();
+        
+        HashMap hm = new HashMap();
+        hm.put("title", title);
+        hm.put("description", description);
+        hm.put("threadId", threadId);
+        hm.put("user", email);
+        
+        Boolean flag = discussionDao.insertComment(hm);
+        
+        HashMap<String,String> jresponse = new HashMap<String,String>();
+        jresponse.put("success", flag.toString());
+        if(flag == true) {
+            jresponse.put("message", "Successfully saved data.");
+        } else {
+            jresponse.put("message", "Not implemented yet!");
+        }
+        
+        model.addAttribute("response", toJSON(jresponse));
+        return TemplateJson;
+    }
+    
 }

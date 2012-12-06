@@ -76,7 +76,13 @@ var Attraction = {
             $.ajax({
                 method: 'GET',
                 url: urlStr,
-                success: function(response) {commentsDiv.html(response);},
+                success: function(response) {
+                    commentsDiv.html(response); 
+                    commentsDiv.find('.new-comment-link').click(function() {
+                        AppDialog.showDialog(this.href, 'medium', 'Add Comment');
+                        return false;
+                    }); 
+                },
                 failure: function() {commentsDiv.html('Unable to load comments. Try again!');}
             });
             

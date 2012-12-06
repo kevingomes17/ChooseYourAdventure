@@ -73,7 +73,7 @@ public class DiscussionDao extends BaseDao {
     public List<Discussionthreadcomment> getCommentsFromThread(String threadId) {
         try {
             TypedQuery<Discussionthread> dTthreadQuery = em.createNamedQuery("Discussionthread.findById", Discussionthread.class);
-            dTthreadQuery.setParameter("threadId", new BigDecimal(threadId));
+            dTthreadQuery.setParameter("id", new BigDecimal(threadId));
             Discussionthread thread = dTthreadQuery.getSingleResult();
             List<Discussionthreadcomment> comments = (List) thread.getDiscussionthreadcommentCollection();
             return comments;
@@ -118,5 +118,36 @@ public class DiscussionDao extends BaseDao {
             return false;
         }
 
+    }
+
+    public Boolean insertComment(HashMap hm) {
+        try{
+            Discussionthreadcomment comment = new Discussionthreadcomment();
+            
+            //get thread
+            TypedQuery<Discussionthread> threadQuery = em.createNamedQuery("Discussionthread.findById", Discussionthread.class);
+            threadQuery.setParameter("id", new BigDecimal(hm.get("threadId").toString()));
+            Discussionthread thread = threadQuery.getSingleResult();
+            
+            Userbase user = getUserObj(hm.get("user").toString());
+            
+            System.out.println("User name = " + user.getDisplayname());
+            
+            Date date = new Date();
+            comment.setDescription(hm.get("description").toString());
+            comment.setCreatedon(date);
+            comment.setModifiedon(date);
+            comment.setCreatedby(user.getId().toBigIntegerExact());
+            comment.setModifiedby(user.getId().toBigInteger());
+            comment.setUserid(user);
+            comment.setThreadid(thread);
+            comment.setTitle(hm.get("title").toString());
+            
+            return daoService.insert(comment);
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    
     }
 }
