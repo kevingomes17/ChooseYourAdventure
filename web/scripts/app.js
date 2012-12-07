@@ -15,6 +15,18 @@ var App = {
 var User = {
     validateLogin: function() {
         $('#login-form').validate();
+    },
+    
+    initRegister: function() {
+        $('#user-register-form').validate();
+        $('#user-register-form').submit(function() {
+            if($(this).valid()) {
+                $.post(AppConfig.baseUrl+'/user/register.htm', $(this).serialize(), function(response) { 
+                    
+                }, 'json');
+            }
+            return false;
+        });
     }
 };
 

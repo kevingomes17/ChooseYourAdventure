@@ -18,6 +18,7 @@ import org.chooseadventure.entity.*;
 import org.springframework.util.StringUtils;
 import java.util.HashMap;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.Produces;
 import org.chooseadventure.utils.Utils;
 
 /**
@@ -137,5 +138,47 @@ public class UserController extends BaseController {
         
         setModelParameters(request, model, "view_guests.jsp", "List of Guests");
         return TemplateFile;
+    }
+            
+    @RequestMapping(value = "/register", method=RequestMethod.GET)
+    public String register(HttpServletRequest request, HttpServletResponse response, Model model) {
+        
+        setModelParameters(request, model, "user_register.jsp", "Register User");
+        return TemplateFile;
+    }
+    
+    @Produces({"application/json"})
+    @RequestMapping(value = "/register", method=RequestMethod.POST)
+    public String register_submitHandler(HttpServletRequest request, HttpServletResponse response, Model model) {        
+        String currentUsername = getUserIdFromSession(request);
+        
+        String username = Utils.GetValIfNull(request.getParameter("username"), "");
+        String password = Utils.GetValIfNull(request.getParameter("password"), "");
+        String displayName = Utils.GetValIfNull(request.getParameter("displayName"), "");
+        String address = Utils.GetValIfNull(request.getParameter("address"), "");
+        String city = Utils.GetValIfNull(request.getParameter("city"), "");
+        String zipcode = Utils.GetValIfNull(request.getParameter("zipcode"), "");
+        
+        String cardNumber = Utils.GetValIfNull(request.getParameter("cardNumber"), "");
+        String expiry = Utils.GetValIfNull(request.getParameter("expiry"), "");
+        String code = Utils.GetValIfNull(request.getParameter("code"), "");
+        
+        HashMap<String,String> ds = new HashMap<String,String>();
+        ds.put("username", username);
+        ds.put("password",password);
+        ds.put("displayName",displayName);
+        ds.put("address",address);
+        ds.put("city",city);
+        ds.put("zipcode",zipcode);
+        ds.put("cardNumber",cardNumber);
+        ds.put("expiry",expiry);
+        ds.put("code",code);
+        
+        HashMap<String,String> jresponse = new HashMap<String,String>();
+        Boolean flag = userDao.save(currentUsername, ds, "add");        
+        jresponse.put("success", flag.toString());
+        
+        model.addAttribute("response", jresponse);
+        return TemplateJson;
     }
 }

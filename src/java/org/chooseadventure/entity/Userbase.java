@@ -133,6 +133,18 @@ public class Userbase implements Serializable {
         this.id = id;
     }
 
+    public Userbase(String displayname, String email, String password, String address, String zipcode, BigInteger createdby, Date createdon, BigInteger modifiedby, Date modifiedon) {
+        this.displayname = displayname;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.zipcode = zipcode;
+        this.createdby = createdby;
+        this.createdon = createdon;
+        this.modifiedby = modifiedby;
+        this.modifiedon = modifiedon;
+    }
+    
     public Userbase(BigDecimal id, String displayname, String email, String password, String address, String zipcode, BigInteger createdby, Date createdon, BigInteger modifiedby, Date modifiedon) {
         this.id = id;
         this.displayname = displayname;

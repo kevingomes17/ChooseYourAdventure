@@ -35,8 +35,8 @@
                 <td valign="top">
                     <strong>Reward Points</strong>
                     <div>
-                            <input type="hidden" value="${user.getUserwebsite().getRewardPoints()}" name="available_reward_points" id="available-reward-points" />
-                            <label>Available Reward Points:</label> ${user.getUserwebsite().getRewardPoints()} <br/>
+                            <input type="hidden" value="${guest.getRewardpoints()}" name="available_reward_points" id="available-reward-points" />
+                            <label>Available Reward Points:</label> ${guest.getRewardpoints()} <br/>
                             <label>Reward Points Used:</label> <input size="6" class="required" type="text" name="reward_points" id="reward-points" value="0" />
                     </div>
                 </td>

@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.management.Query;
@@ -130,26 +131,41 @@ public class UserDao extends BaseDao {
     public Boolean hasRole(String username, Integer roleId) {
         try {
             Userbase user = getUser(username);
-
-            //TypedQuery<CountRows> query = em.createQuery("SELECT COUNT(EMPLOYEEID) as mycount FROM EMPLOYEEROLE WHERE EMPLOYEEID = " + user.getId().toString() + " AND ROLEID = " + roleId, CountRows.class);
-            //CountRows count = query.getSingleResult();
-
-            //EmployeerolePK epkObj = new EmployeerolePK(user.getId().toBigInteger(), new BigInteger(roleId.toString()));
-            //Role robj = getRoleObj(new BigDecimal(roleId.toString()));
-
             TypedQuery<Employeerole> query = em.createNamedQuery("Employeerole.findByEmployeeIdRoleId", Employeerole.class);
             query.setParameter("employeeid", user.getId().toBigInteger());
             query.setParameter("roleid", new BigInteger(roleId.toString()));
 
             Employeerole erObj = query.getSingleResult();
-
-            System.out.println("Baburao");
-            System.out.println(erObj);
             return true;
         } catch (NoResultException ex1) {
             return false;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Boolean save(String username, HashMap<String, String> ds, String action) {
+        try {
+            Userbase existingUser = getUser(ds.get("username").toString());
+            if (existingUser == null) {
+                Userbase currentUser = getUser("username");
+                Date date = new Date();
+                Userbase user = new Userbase(
+                        ds.get("displayName").toString(),
+                        ds.get("username").toString(),
+                        ds.get("password").toString(),
+                        ds.get("address").toString(),
+                        ds.get("zipcode").toString(),
+                        currentUser.getId().toBigInteger(), date,
+                        currentUser.getId().toBigInteger(), date);
+
+                return daoService.insert(user);
+            }
+            
+            //User already exists
+            return false;
+        } catch (Exception e) {
             return false;
         }
     }

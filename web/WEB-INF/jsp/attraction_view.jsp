@@ -24,7 +24,9 @@
 <c:if test="${not empty Username}">
     <a href="${BasePath}/attraction/purchase-attraction.htm?attractionId=${attraction.getId()}">Purchase Ticket</a>
 </c:if>
-
+    <c:if test="${empty Username}">
+        <a href="${BasePath}/user/login.htm">Login</a> | <a href="${BasePath}/user/register.htm">Register</a> to purchase ticket.
+    </c:if>
 <br>
 
 <c:if test="${not empty discussions}">

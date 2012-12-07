@@ -98,6 +98,50 @@ public class AttractionController extends BaseController {
         return TemplateFile;
     }
     
+    @RequestMapping(value = "/view-attraction")
+    public String viewAttraction(HttpServletRequest request, HttpServletResponse response, Model model) {
+        String attId = Utils.GetValIfNull(request.getParameter("attraction"), "0");
+        String pkgId = Utils.GetValIfNull(request.getParameter("package"), "0");
+        
+        if(!"0".equals(attId)) { //Display attraction landing page
+            Attraction attObj = attractionDao.getAttraction(attId);
+            model.addAttribute("attraction", attObj);
+            
+            List<Discussiontopic> disList = discussionDao.getDiscussionTopicsbyAtt(attId);
+            model.addAttribute("discussions", disList);
+            
+            HashMap<String,Collection<Discussionthread>> dThreads = new HashMap<String,Collection<Discussionthread>>();
+            HashMap<String,Integer> topicLikes = new HashMap<String,Integer>();
+            HashMap<String,Integer> topicDislikes = new HashMap<String,Integer>();
+            HashMap<String,Integer> threadLikes = new HashMap<String,Integer>();
+            HashMap<String,Integer> threadDislikes = new HashMap<String,Integer>();
+            
+            Iterator ditr = disList.iterator();
+            while(ditr.hasNext()) {
+                Discussiontopic dobj = (Discussiontopic) ditr.next();
+                dThreads.put(dobj.getId().toString(),dobj.getDiscussionthreadCollection());
+                topicLikes.put(dobj.getId().toString(), likesDao.getLikesForTopic(dobj.getId().toString()));
+                topicDislikes.put(dobj.getId().toString(), likesDao.getDislikesForTopic(dobj.getId().toString()));
+            }
+            
+            int attLikes = likesDao.getLikesForAttaction(attId);
+            int attDislikes = likesDao.getDislikesForAttaction(attId);
+            
+            model.addAttribute("attlikescount", attLikes);
+            model.addAttribute("attdislikescount", attDislikes);
+            model.addAttribute("dThreads", dThreads);
+            model.addAttribute("topicLikes", topicLikes);
+            model.addAttribute("topicDislikes", topicDislikes);
+            
+            
+            setModelParameters(request, model, "attraction_view.jsp", "Attraction: "+attObj.getName());
+        } else {
+            model.addAttribute("package", attractionDao.getPackage(pkgId));
+            setModelParameters(request, model, "package_view.jsp", "View Package");
+        }
+        return TemplateFile;
+    }
+    
     @RequestMapping(value = "/package-view", method = RequestMethod.GET)
     public String packageView(HttpServletRequest request, HttpServletResponse response, Model model) {
         String pkgId = Utils.GetValIfNull(request.getParameter("package"), "0");
@@ -171,6 +215,9 @@ public class AttractionController extends BaseController {
             Userbase user = attractionDao.getUserObj(getUserIdFromSession(request));
             model.addAttribute("user", user);
             model.addAttribute("paymentInfo", user.getUserpaymentinfo());
+            
+            Userwebsite guest = user.getUserwebsite();
+            model.addAttribute("guest", guest);
         }
         
         setModelParameters(request, model, "purchase_attraction_ticket.jsp", "Purchase Attraction Ticket");
