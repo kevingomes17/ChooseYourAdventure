@@ -1,5 +1,12 @@
+
 /* Drop Triggers */
 
+DROP TRIGGER TRG_EMPLOYEETEAMCOUNTCHECK;
+DROP TRIGGER TRG_UPDT_RVNUE_ATRCTN_PRCHSE;
+DROP TRIGGER TRG_UPDT_RVNUE_PCKG_PRCHSE;
+DROP TRIGGER TRG_UPDT_RWRDPTS_DISCSN;
+DROP TRIGGER TRG_UPDT_RWRDPTS_DISCSNCMNTS;
+DROP TRIGGER TRG_UPDT_RWRDPTS_TRNSCTN;
 DROP TRIGGER TRI_ACTIVITYLOG_ID;
 DROP TRIGGER TRI_ACTIVITYTYPE_ID;
 DROP TRIGGER TRI_ATTRACTIONREVIEW_ID;
@@ -15,6 +22,7 @@ DROP TRIGGER TRI_DISCUSSIONTHREAD_ID;
 DROP TRIGGER TRI_DISCUSSIONTOPIC_ID;
 DROP TRIGGER TRI_LIKES_ID;
 DROP TRIGGER TRI_MEMBERSHIP_TYPE_ID;
+DROP TRIGGER TRI_NOTIFICATION_ID;
 DROP TRIGGER TRI_PACKAGES_ID;
 DROP TRIGGER TRI_ROLE_ID;
 DROP TRIGGER TRI_TEAM_ID;
@@ -44,7 +52,10 @@ DROP TABLE TRANSACTIONATTRACTION;
 DROP TABLE ATTRACTION;
 DROP TABLE ATTRACTIONTYPE;
 DROP TABLE DISCUSSIONTOPICBYCITY;
+DROP TABLE TRANSACTIONPACKAGE;
+DROP TABLE PACKAGES;
 DROP TABLE CITY;
+
 DROP TABLE COMPANY;
 DROP TABLE TRANSACTIONDISCOUNT;
 DROP TABLE DISCOUNT;
@@ -58,8 +69,7 @@ DROP TABLE EMPLOYEE_TEAM;
 DROP TABLE LIKES;
 DROP TABLE USERWEBSITE;
 DROP TABLE MEMBERSHIP_TYPE;
-DROP TABLE TRANSACTIONPACKAGE;
-DROP TABLE PACKAGES;
+DROP TABLE NOTIFICATION;
 DROP TABLE REVENUE;
 DROP TABLE ROLE;
 DROP TABLE TEAM;
@@ -89,6 +99,7 @@ DROP SEQUENCE SEQ_DISCUSSIONTHREAD_ID;
 DROP SEQUENCE SEQ_DISCUSSIONTOPIC_ID;
 DROP SEQUENCE SEQ_LIKES_ID;
 DROP SEQUENCE SEQ_MEMBERSHIP_TYPE_ID;
+DROP SEQUENCE SEQ_NOTIFICATION_ID;
 DROP SEQUENCE SEQ_PACKAGES_ID;
 DROP SEQUENCE SEQ_ROLE_ID;
 DROP SEQUENCE SEQ_TEAM_ID;
@@ -120,6 +131,7 @@ CREATE SEQUENCE SEQ_DISCUSSIONTHREAD_ID INCREMENT BY 1 START WITH 1;
 CREATE SEQUENCE SEQ_DISCUSSIONTOPIC_ID INCREMENT BY 1 START WITH 1;
 CREATE SEQUENCE SEQ_LIKES_ID INCREMENT BY 1 START WITH 1;
 CREATE SEQUENCE SEQ_MEMBERSHIP_TYPE_ID INCREMENT BY 1 START WITH 1;
+CREATE SEQUENCE SEQ_NOTIFICATION_ID INCREMENT BY 1 START WITH 1;
 CREATE SEQUENCE SEQ_PACKAGES_ID INCREMENT BY 1 START WITH 1;
 CREATE SEQUENCE SEQ_ROLE_ID INCREMENT BY 1 START WITH 1;
 CREATE SEQUENCE SEQ_TEAM_ID INCREMENT BY 1 START WITH 1;
@@ -463,6 +475,20 @@ CREATE TABLE MEMBERSHIP_TYPE
 );
 
 
+CREATE TABLE NOTIFICATION
+(
+	ID NUMBER NOT NULL,
+	USERID NUMBER,
+	TITLE VARCHAR2(50) NOT NULL,
+	DESCRIPTION VARCHAR2(200),
+	CREATEDBY NUMBER NOT NULL,
+	CREATEDON DATE NOT NULL,
+	MODIFIEDBY NUMBER NOT NULL,
+	MODIFIEDON DATE NOT NULL,
+	PRIMARY KEY (ID)
+);
+
+
 CREATE TABLE PACKAGEATTRACTION
 (
 	PACKAGEID NUMBER NOT NULL,
@@ -771,6 +797,12 @@ ALTER TABLE DISCUSSIONTOPICBYCITY
 ;
 
 
+ALTER TABLE PACKAGES
+	ADD FOREIGN KEY (CITYID)
+	REFERENCES CITY (ID)
+;
+
+
 ALTER TABLE ATTRACTION
 	ADD CONSTRAINT FK_COMPANY_ATTRACTION FOREIGN KEY (COMPANYID)
 	REFERENCES COMPANY (ID)
@@ -921,6 +953,11 @@ ALTER TABLE LIKES
 ;
 
 
+ALTER TABLE NOTIFICATION
+	ADD FOREIGN KEY (USERID)
+	REFERENCES USERBASE (ID)
+;
+
 ALTER TABLE TRANSACTIONINFO
 	ADD FOREIGN KEY (USERID)
 	REFERENCES USERBASE (ID)
@@ -998,9 +1035,207 @@ ALTER TABLE TEAM
 	REFERENCES USEREMPLOYEE (USERID)
 ;
 
+/* Create Functions */
+create or replace function Get_SecPerson_Unavailable( directId number, date_req date)
+return varchar2
+ as
+begin
+     declare attractid number;
+             attractname attraction.name%type;
+             count_rec number;
+             tom_date date;
+             flag_securityAvailable number;
+             ret_notifications varchar2(500);
+begin
+    -- Get tomorrows date
+     tom_date := current_date + 1;
+    
+    -- Set security_available flag to false
+     flag_securityAvailable := 0;
+    
+    -- Get  attraction under this director
+    for  attrs in (select id, name from attraction where directorid = directid)
+    loop
+        attractid :=attrs.id; 
+        attractname := attrs.name; 
+        -- Get employees who work as security for this attraction
+        for  i in (select erl.employeeid as employeeid  from attractionemployee att,employeerole erl where 
+        attractionid = attractid and erl.roleid=8 and att.employeeid = erl.employeeid)
+        loop
+            -- Check if employee is on leave tomorrow.
+            select count(*) into count_rec from employeedateworking where userid = i.employeeid and TRUNC( dayoff) = TO_DATE(date_req);
+            if count_rec > 0 then
+                 flag_securityAvailable := 0;
+                 --exit;
+                 
+            else 
+                flag_securityAvailable := 1;
+               exit;
+            end if;
+        end loop;
+        if flag_securityAvailable = 0 then
+        ret_notifications := ret_notifications || 'Security personnel unvailable at ' || attractname ||' on '|| TO_char(date_req,'MON/DD/YYYY') || ',' ||'There are no attraction security staff available at '|| attractname ||' on '|| TO_char(date_req,'MON/DD/YYYY') || '|';
+        end if;
+    end loop;
+return ret_notifications;
+end;
+end;
+        
+        
+ 
+/
+create or replace function get_revenue_amount_attraction(transid number,attractid number)
+return number is
+begin
+declare ret_revenue_amount number default 0;
+            creditcardamount number default 0;
+            companyid number default 0;
+            commission number default 0;
+begin
 
+ 
+select creditcardamount into creditcardamount from transactioninfo where id =transid;
+select companyid, commission into companyid,commission from attraction where id=attractid;
+
+if companyid = 1 then
+  ret_revenue_amount := creditcardamount;
+else 
+ ret_revenue_amount := creditcardamount * commission /100;
+end if;
+
+return ret_revenue_amount;
+END;
+END;
+
+/
+
+create or replace function get_revenue_amount_package(transid number,packgid number)
+return number is
+begin
+declare ret_revenue_amount number(7,2) default 0;
+            creditcardamount_t number default 0;
+            companyid_t number default 0;
+            commission_t number default 0;
+            attid_t number;
+            attractionTicketCost_t number default 0.00;
+            total_default_attraction_cost number default 0.00;
+            
+           
+begin
+
+ 
+select creditcardamount into creditcardamount_t from transactioninfo where id =transid;
+--select attractionid into attid from packageattraction where packageid = packageid;
+
+select sum(costperticket) into total_default_attraction_cost from packageattraction,attraction where 
+packageattraction.packageid= packgid and attraction.id =packageattraction.attractionid;
+ 
+   
+FOR i in (select attractionid from packageattraction where packageid = packgid)
+LOOP
+       select companyid, commission,costperticket into companyid_t,commission_t,attractionTicketCost_t from attraction where id=i.attractionid;
+       if companyid_t = 1 then
+         ret_revenue_amount := ret_revenue_amount + attractionTicketCost_t  * creditcardamount_t/total_default_attraction_cost;
+       else 
+         ret_revenue_amount := ret_revenue_amount + attractionTicketCost_t  * commission_t * creditcardamount_t/(100.00 * total_default_attraction_cost);
+       end if;
+ 
+
+   end loop;
+ 
+   return ret_revenue_amount;
+END;
+END;
+/
 
 /* Create Triggers */
+create or replace trigger trg_notification_user
+after update or insert of membershiptype on userwebsite
+for each row
+begin
+    declare membershipstatus  membership_type.name%TYPE;
+begin
+    select name into membershipstatus from membership_type where id = :NEW.membershiptype;
+    insert into notification(id, userid, title, description, createdby, createdon, modifiedby, modifiedon ) values(0,:NEW.userid,'Membership Status Changed','You are now a ' || membershipstatus || ' member', 1, current_Date, 1, current_date);
+END;
+END;
+/
+CREATE TRIGGER TRG_EMPLOYEETEAMCOUNTCHECK BEFORE INSERT ON EMPLOYEE_TEAM
+FOR EACH ROW
+DECLARE  COUNT_TEAM NUMBER;
+             
+BEGIN
+SELECT COUNT(EMPLOYEEID) INTO COUNT_TEAM FROM EMPLOYEE_TEAM WHERE EMPLOYEEID=:NEW.EMPLOYEEID;
+ 
+ IF COUNT_TEAM >= 3 THEN
+ 
+RAISE_APPLICATION_ERROR(-20005, 'EMPLOYEE_NOT_ALLOWED_IN_4_TEAMS');
+END IF;
+ END;
+ /
+CREATE TRIGGER TRG_UPDT_RVNUE_ATRCTN_PRCHSE AFTER INSERT ON TRANSACTIONATTRACTION
+FOR EACH ROW
+
+DECLARE  REVENUE_T NUMBER(7,2);
+             
+BEGIN
+REVENUE_T := GET_REVENUE_AMOUNT_ATTRACTION(:NEW.TRANSACTIONID,:NEW.ATTRACTIONID);
+
+ INSERT INTO REVENUE (TRANSACTIONID, REVENUEAMOUNT, CREATEDBY,CREATEON,MODIFIEDBY,MODIFIEDON)
+    VALUES (:NEW.TRANSACTIONID,REVENUE_T,1, CURRENT_DATE,1,CURRENT_DATE);
+
+
+END;
+/
+CREATE TRIGGER TRG_UPDT_RVNUE_PCKG_PRCHSE AFTER INSERT ON TRANSACTIONPACKAGE
+FOR EACH ROW
+
+DECLARE  REVENUE_T NUMBER(7,2);
+             
+BEGIN
+REVENUE_T := GET_REVENUE_AMOUNT_PACKAGE(:NEW.TRANSACTIONID,:NEW.PACKAGEID);
+
+ INSERT INTO REVENUE (TRANSACTIONID, REVENUEAMOUNT, CREATEDBY,CREATEON,MODIFIEDBY,MODIFIEDON)
+    VALUES (:NEW.TRANSACTIONID,REVENUE_T,1, CURRENT_DATE,1,CURRENT_DATE);
+
+
+END;
+/
+CREATE TRIGGER TRG_UPDT_RWRDPTS_DISCSN AFTER INSERT ON DISCUSSIONTHREAD
+FOR EACH ROW
+
+DECLARE  POINTS_T NUMBER;
+         MEMBERSHIPTYPE_T NUMBER;
+             
+BEGIN
+POINTS_T := 2;
+SELECT ID INTO MEMBERSHIPTYPE_T FROM MEMBERSHIP_TYPE WHERE CREDIT_POINTS_NEEDED <= (SELECT CREDITPOINTS + POINTS_T FROM USERWEBSITE WHERE USERID=7) AND ROWNUM=1;
+UPDATE USERWEBSITE SET REWARDPOINTS = REWARDPOINTS + POINTS_T , CREDITPOINTS = CREDITPOINTS + POINTS_T, MEMBERSHIPTYPE = MEMBERSHIPTYPE_T  WHERE USERID = :NEW.USERID;
+END;
+/
+CREATE TRIGGER TRG_UPDT_RWRDPTS_DISCSNCMNTS AFTER INSERT ON DISCUSSIONTHREADCOMMENT
+FOR EACH ROW
+
+DECLARE  POINTS_T NUMBER;
+         MEMBERSHIPTYPE_T NUMBER;
+             
+BEGIN
+POINTS_T := 2;
+SELECT ID INTO MEMBERSHIPTYPE_T FROM MEMBERSHIP_TYPE WHERE CREDIT_POINTS_NEEDED <= (SELECT CREDITPOINTS + POINTS_T FROM USERWEBSITE WHERE USERID=7) AND ROWNUM=1;
+UPDATE USERWEBSITE SET REWARDPOINTS = REWARDPOINTS + POINTS_T , CREDITPOINTS = CREDITPOINTS + POINTS_T, MEMBERSHIPTYPE = MEMBERSHIPTYPE_T  WHERE USERID = :NEW.USERID;
+END;
+/
+CREATE TRIGGER TRG_UPDT_RWRDPTS_TRNSCTN AFTER INSERT ON TRANSACTIONINFO
+FOR EACH ROW
+
+DECLARE  POINTS_T NUMBER;
+         MEMBERSHIPTYPE_T NUMBER;
+             
+BEGIN
+POINTS_T := :NEW.CREDITCARDAMOUNT;
+SELECT ID INTO MEMBERSHIPTYPE_T FROM MEMBERSHIP_TYPE WHERE CREDIT_POINTS_NEEDED <= (SELECT CREDITPOINTS + POINTS_T FROM USERWEBSITE WHERE USERID=7) AND ROWNUM=1;
+UPDATE USERWEBSITE SET REWARDPOINTS = REWARDPOINTS + POINTS_T , CREDITPOINTS = CREDITPOINTS + POINTS_T, MEMBERSHIPTYPE = MEMBERSHIPTYPE_T  WHERE USERID = :NEW.USERID;
+END;
 /
 CREATE TRIGGER TRI_ACTIVITYLOG_ID BEFORE INSERT ON ACTIVITYLOG
 FOR EACH ROW
@@ -1122,6 +1357,14 @@ BEGIN
 	FROM DUAL;
 END;
 /
+CREATE TRIGGER TRI_NOTIFICATION_ID BEFORE INSERT ON NOTIFICATION
+FOR EACH ROW
+BEGIN
+	SELECT SEQ_NOTIFICATION_ID.NEXTVAL
+	INTO :NEW.ID
+	FROM DUAL;
+END;
+/
 CREATE TRIGGER TRI_PACKAGES_ID BEFORE INSERT ON PACKAGES
 FOR EACH ROW
 BEGIN
@@ -1201,24 +1444,9 @@ BEGIN
 	INTO :NEW.ID
 	FROM DUAL;
 END;
+
 /
 
-
-create or replace 
-trigger trg_employeeteamCountCheck
-Before insert on EMPLOYEE_TEAM
-For Each Row
-DECLARE  count_team number;
-             
-BEGIN
-select count(employeeid) into count_team from employee_team where employeeid=:NEW.employeeid;
- 
- if count_team >= 3 then
- 
-RAISE_APPLICATION_ERROR(-20005, 'EMPLOYEE_NOT_ALLOWED_IN_4_TEAMS');
-end if;
- END;
-/
 /* Comments */
 
 COMMENT ON COLUMN DISCOUNT.FORMULA IS '% / $';
@@ -1233,5 +1461,6 @@ COMMENT ON COLUMN REVENUE.REVENUETYPE IS '0-deleted
 1-Own Revenue
 2-Commision Earned';
 COMMENT ON COLUMN ROLE.TYPE IS 'Marketing / Operations';
+
 
 
