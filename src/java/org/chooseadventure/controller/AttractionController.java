@@ -68,6 +68,8 @@ public class AttractionController extends BaseController {
             HashMap<String,Collection<Discussionthread>> dThreads = new HashMap<String,Collection<Discussionthread>>();
             HashMap<String,Integer> topicLikes = new HashMap<String,Integer>();
             HashMap<String,Integer> topicDislikes = new HashMap<String,Integer>();
+            HashMap<String,Integer> threadLikes = new HashMap<String,Integer>();
+            HashMap<String,Integer> threadDislikes = new HashMap<String,Integer>();
             
             Iterator ditr = disList.iterator();
             while(ditr.hasNext()) {
@@ -112,6 +114,18 @@ public class AttractionController extends BaseController {
         String threadId = Utils.GetValIfNull(request.getParameter("threadId"), "0");
         
         List<Discussionthreadcomment> comments = discussionDao.getCommentsFromThread( threadId);
+        HashMap<String,Integer> commentDislikes = new HashMap<String,Integer>();
+        HashMap<String,Integer> commentLikes = new HashMap<String,Integer>();
+        
+        Iterator citor = comments.iterator();
+        while (citor.hasNext()){
+            Discussionthreadcomment comm = (Discussionthreadcomment)citor.next();
+            commentLikes.put(comm.getId().toString(), likesDao.getLikesForComment(comm.getId().toString()));
+            commentDislikes.put(comm.getId().toString(), likesDao.getDislikesForComment(comm.getId().toString()));   
+        }
+        
+        model.addAttribute("commentlikes", commentLikes);
+        model.addAttribute("commentdislikes", commentDislikes);
         model.addAttribute("comments", comments);
         model.addAttribute("threadId", threadId);
         model.addAttribute("Filename", "attraction_comments.jsp");

@@ -141,6 +141,30 @@ var Attraction = {
             });
             return false;
         });
+        
+        $("a.likecomm").click(function(){
+            $.ajax({
+                method: 'GET',
+                url: $(this).attr("href"),
+                success: function() {
+                    alert('Liked!!');
+            },
+                failure: function() {alert('Unable to Like. Try again!');}
+            });
+            return false;
+        });
+        
+        $("a.dislikecomm").click(function(){
+            $.ajax({
+                method: 'GET',
+                url: $(this).attr("href"),
+                success: function() {
+                    alert('Disliked!!');
+            },
+                failure: function() {alert('Unable to dislike. Try again!');}
+            });
+            return false;
+        });
     }
 };
 

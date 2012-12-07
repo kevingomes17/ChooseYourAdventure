@@ -117,16 +117,16 @@ public class LikesDao extends BaseDao {
         }
 
     }
-    
-        public int getDislikesForTopic(String topicId) {
+
+    public int getDislikesForTopic(String topicId) {
         try {
             TypedQuery<Likes> likesQuery = em.createNamedQuery("Likes.findPerContentType", Likes.class);
             int topic = Integer.valueOf(topicId);
             likesQuery.setParameter("foreignid", topic);
             likesQuery.setParameter("contenttype", AppConstants.topicContentType);
             likesQuery.setParameter("likeordislike", new BigDecimal(AppConstants.dislike));
-            List<Likes> attLikes = likesQuery.getResultList();
-            return attLikes.size();
+            List<Likes> topicDislikes = likesQuery.getResultList();
+            return topicDislikes.size();
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -151,8 +151,8 @@ public class LikesDao extends BaseDao {
             return false;
         }
     }
-    
-        public boolean dislikeTopic(String topicId) {
+
+    public boolean dislikeTopic(String topicId) {
         try {
             Date date = new Date();
 
@@ -169,7 +169,140 @@ public class LikesDao extends BaseDao {
             return false;
         }
     }
-    
 
+    public int getLikesForThread(String threadId) {
+        try {
+            TypedQuery<Likes> likesQuery = em.createNamedQuery("Likes.findPerContentType", Likes.class);
+            int thread = Integer.valueOf(threadId);
+            likesQuery.setParameter("foreignid", thread);
+            likesQuery.setParameter("contenttype", AppConstants.threadContentType);
+            likesQuery.setParameter("likeordislike", new BigDecimal(AppConstants.like));
+            List<Likes> threadLikes = likesQuery.getResultList();
+            return threadLikes.size();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
+    public int getDislikesForThread(String threadId) {
+        try {
+            TypedQuery<Likes> likesQuery = em.createNamedQuery("Likes.findPerContentType", Likes.class);
+            int thread = Integer.valueOf(threadId);
+            likesQuery.setParameter("foreignid", thread);
+            likesQuery.setParameter("contenttype", AppConstants.threadContentType);
+            likesQuery.setParameter("likeordislike", new BigDecimal(AppConstants.dislike));
+            List<Likes> threadDislikes = likesQuery.getResultList();
+            return threadDislikes.size();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
+    public boolean likeThread(String threadId) {
+        try {
+            Date date = new Date();
+
+            Likes like = new Likes();
+            like.setContenttype(AppConstants.threadContentType);
+            like.setForeignid(Integer.parseInt(threadId));
+            like.setLikeordislike(new BigInteger(String.valueOf(AppConstants.like)));
+            like.setModifiedon(date);
+            like.setCreatedon(date);
+            return daoService.insert(like);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean dislikeThread(String threadId) {
+        try {
+            Date date = new Date();
+
+            Likes like = new Likes();
+            like.setContenttype(AppConstants.threadContentType);
+            like.setForeignid(Integer.parseInt(threadId));
+            like.setLikeordislike(new BigInteger(String.valueOf(AppConstants.dislike)));
+            like.setModifiedon(date);
+            like.setCreatedon(date);
+            return daoService.insert(like);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     
+    public int getLikesForComment(String commentId) {
+        try {
+            TypedQuery<Likes> likesQuery = em.createNamedQuery("Likes.findPerContentType", Likes.class);
+            int comment = Integer.valueOf(commentId);
+            likesQuery.setParameter("foreignid", comment);
+            likesQuery.setParameter("contenttype", AppConstants.commentContentType);
+            likesQuery.setParameter("likeordislike", new BigDecimal(AppConstants.like));
+            List<Likes> commentLikes = likesQuery.getResultList();
+            return commentLikes.size();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
+    public int getDislikesForComment(String commentId) {
+        try {
+            TypedQuery<Likes> likesQuery = em.createNamedQuery("Likes.findPerContentType", Likes.class);
+            int comment = Integer.valueOf(commentId);
+            likesQuery.setParameter("foreignid", comment);
+            likesQuery.setParameter("contenttype", AppConstants.commentContentType);
+            likesQuery.setParameter("likeordislike", new BigDecimal(AppConstants.dislike));
+            List<Likes> commentDislikes = likesQuery.getResultList();
+            return commentDislikes.size();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
+    public boolean likeComment(String commentId) {
+        try {
+            Date date = new Date();
+
+            Likes like = new Likes();
+            like.setContenttype(AppConstants.commentContentType);
+            like.setForeignid(Integer.parseInt(commentId));
+            like.setLikeordislike(new BigInteger(String.valueOf(AppConstants.like)));
+            like.setModifiedon(date);
+            like.setCreatedon(date);
+            return daoService.insert(like);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean dislikeComment(String commentId) {
+        try {
+            Date date = new Date();
+
+            Likes like = new Likes();
+            like.setContenttype(AppConstants.commentContentType);
+            like.setForeignid(Integer.parseInt(commentId));
+            like.setLikeordislike(new BigInteger(String.valueOf(AppConstants.dislike)));
+            like.setModifiedon(date);
+            like.setCreatedon(date);
+            return daoService.insert(like);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

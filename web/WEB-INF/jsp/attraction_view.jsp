@@ -36,6 +36,8 @@
                 <c:if test="${not empty dThreads.get(dobj.getId().toString())}">
                     <ol>
                         <c:forEach items="${dThreads.get(dobj.getId().toString())}" var="thobj">
+                            
+                            <!--skgfj-->
                             <li>
                                 <a href="${BasePath}/attraction/attraction-comments.htm?attractionId=${attraction.getId()}&topicId=${dobj.getId()}&threadId=${thobj.getId()}" class="discussion-thread-title">${thobj.getTitle()}</a>
                                 <div class="thread-comments"></div>
