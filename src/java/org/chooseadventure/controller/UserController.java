@@ -125,4 +125,13 @@ public class UserController extends BaseController {
 
         return flag;
     }
+    
+    @RequestMapping(value = "/view-guests")
+    public String viewGuests(HttpServletRequest request, HttpServletResponse response, Model model) {
+        List<Userwebsite> users = userDao.getGuestUsers();
+        model.addAttribute("users", users);
+        
+        setModelParameters(request, model, "view_guests.jsp", "List of Guests");
+        return TemplateFile;
+    }
 }

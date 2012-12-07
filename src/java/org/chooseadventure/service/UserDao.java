@@ -46,6 +46,12 @@ public class UserDao extends BaseDao {
         }
     }
     
+    /**
+     * 
+     * @param username
+     * @param phones
+     * @return 
+     */
     public Boolean updatePhones(String username, String[] phones) {
         try {
             Userbase user = getUser(username);
@@ -64,6 +70,21 @@ public class UserDao extends BaseDao {
         } catch(Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    /**
+     * Returns the list of guest users in the system.
+     * @return 
+     */
+    public List<Userwebsite> getGuestUsers() {
+        try {
+            TypedQuery<Userwebsite> query = em.createNamedQuery("Userwebsite.findAll", Userwebsite.class);
+            List<Userwebsite> users = query.getResultList();
+            return users;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ArrayList();
         }
     }
 }

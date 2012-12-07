@@ -14,7 +14,7 @@
         <td>
             <form method="POST">
             <c:forEach items="${user.getUserphonesCollection()}" var="phone">
-                <input type="text" name="phone" value="${phone.getPhonenumber()}" <br/>
+                <input type="text" name="phone" value="${phone.getPhonenumber()}"/> <br/>
             </c:forEach>            
                 <input type="submit" value="Edit" />
             </form>
