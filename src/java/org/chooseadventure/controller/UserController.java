@@ -18,6 +18,7 @@ import org.chooseadventure.entity.*;
 import org.springframework.util.StringUtils;
 import java.util.HashMap;
 import javax.servlet.http.HttpSession;
+import org.chooseadventure.utils.Utils;
 
 /**
  *
