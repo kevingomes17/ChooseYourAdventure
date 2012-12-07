@@ -100,8 +100,8 @@ public class AttractionController extends BaseController {
     
     @RequestMapping(value = "/attraction-comments")
     public String attractionComments(HttpServletRequest request, HttpServletResponse response, Model model) {
-        String attId = Utils.GetValIfNull(request.getParameter("attractionId"), "0");
-        String topicId = Utils.GetValIfNull(request.getParameter("topicId"), "0");
+//        String attId = Utils.GetValIfNull(request.getParameter("attractionId"), "0");
+//        String topicId = Utils.GetValIfNull(request.getParameter("topicId"), "0");
         String threadId = Utils.GetValIfNull(request.getParameter("threadId"), "0");
         
         List<Discussionthreadcomment> comments = discussionDao.getCommentsFromThread( threadId);
