@@ -31,6 +31,8 @@
                 <br>
                 Likes: ${topicLikes.get(dobj.getId().toString())} &nbsp;&nbsp;&nbsp; Dislikes: ${topicDislikes.get(dobj.getId().toString())}&nbsp;&nbsp;&nbsp;<a class="liketopic" href="${BasePath}/likes/liketopic.htm?topicId=${dobj.getId().toString()}">Like</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="disliketopic" href="${BasePath}/likes/disliketopic.htm?topicId=${dobj.getId().toString()}">Dislike</a>
 
+                <br><br>
+                <div><strong>Threads</strong></div>
                 <c:if test="${not empty dThreads.get(dobj.getId().toString())}">
                     <ol>
                         <c:forEach items="${dThreads.get(dobj.getId().toString())}" var="thobj">
