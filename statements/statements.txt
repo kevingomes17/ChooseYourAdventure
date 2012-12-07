@@ -1,4 +1,4 @@
--- A.1 Show that a registered guest can view his own information; change his phone number but
+﻿-- A.1 Show that a registered guest can view his own information; change his phone number but
 --     not his membership status nor his reward points.
 
 select displayname,address,city,zipcode from userbase ub where ub.id=7;
@@ -195,4 +195,19 @@ select id from team minus
 select et.teamid  from  employeerole er, employee_team et 
 where  er.employeeid = et.employeeid and
 er.roleid <5;
+
+
+
+--QUERIES :--
+-- 5. Display the attractions that require certain staffing level.
+select attraction.name,   MAINTENANCECOUNT as Maintenance, SECURITYCOUNT as Security, TICKETINGCOUNT as Ticketing, CURATORCOUNT as Curator, TOURGUIDECOUNT as TourGuide
+from attractionmanagement,attraction where attraction.id = attractionmanagement.attractionid and MAINTENANCECOUNT + SECURITYCOUNT + TICKETINGCOUNT + CURATORCOUNT + TOURGUIDECOUNT  >2;
+
+
+-- 6. Display the names of all staffs who work for a certain director and their assignments in the last two days.
+-- Show the case when some of the staffs have not worked the last two days.
+
+select usb.displayname,get_employee_leave_status(usb.id,current_date+1) One_Day_Ago ,get_employee_leave_status(usb.id,current_date-1) Two_Days_Ago   from attractionemployee  emat, userbase usb where emat.employeeid = usb.id and emat.attractionid in(
+select id from attraction where directorid = 20);
+
 
