@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author kevingomes17
+ * @author root
  */
 @Entity
 @Table(name = "LIKES")
@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Likes.findAll", query = "SELECT l FROM Likes l"),
     @NamedQuery(name = "Likes.findById", query = "SELECT l FROM Likes l WHERE l.id = :id"),
     @NamedQuery(name = "Likes.findByContenttype", query = "SELECT l FROM Likes l WHERE l.contenttype = :contenttype"),
+    @NamedQuery(name = "Likes.findPerContentType", query = "SELECT l FROM Likes l WHERE l.contenttype = :contenttype and l.foreignid = :foreignid and l.likeordislike = :likeordislike"),
     @NamedQuery(name = "Likes.findByLikeordislike", query = "SELECT l FROM Likes l WHERE l.likeordislike = :likeordislike"),
     @NamedQuery(name = "Likes.findByForeignid", query = "SELECT l FROM Likes l WHERE l.foreignid = :foreignid"),
     @NamedQuery(name = "Likes.findByCreatedby", query = "SELECT l FROM Likes l WHERE l.createdby = :createdby"),
@@ -59,8 +60,6 @@ public class Likes implements Serializable {
     @NotNull
     @Column(name = "FOREIGNID")
     private int foreignid;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "CREATEDBY")
     private BigInteger createdby;
     @Basic(optional = false)
@@ -68,8 +67,6 @@ public class Likes implements Serializable {
     @Column(name = "CREATEDON")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdon;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "MODIFIEDBY")
     private BigInteger modifiedby;
     @Basic(optional = false)
@@ -88,14 +85,12 @@ public class Likes implements Serializable {
         this.id = id;
     }
 
-    public Likes(BigDecimal id, int contenttype, BigInteger likeordislike, int foreignid, BigInteger createdby, Date createdon, BigInteger modifiedby, Date modifiedon) {
+    public Likes(BigDecimal id, int contenttype, BigInteger likeordislike, int foreignid, Date createdon, Date modifiedon) {
         this.id = id;
         this.contenttype = contenttype;
         this.likeordislike = likeordislike;
         this.foreignid = foreignid;
-        this.createdby = createdby;
         this.createdon = createdon;
-        this.modifiedby = modifiedby;
         this.modifiedon = modifiedon;
     }
 

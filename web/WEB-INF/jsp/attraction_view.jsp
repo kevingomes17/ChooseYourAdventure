@@ -15,7 +15,7 @@
     <div id="ticketcost">
         <strong>Ticket Cost:</strong> $${attraction.getCostperticket()}
     </div>
-    <div ></div>
+    <div >Likes: ${likescount} &nbsp; Dislikes: ${dislikescount}</div>
 </div>
 <br>
 

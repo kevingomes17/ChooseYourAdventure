@@ -29,7 +29,10 @@ public class AttractionController extends BaseController {
     private AttractionDao attractionDao;    
     
     @Autowired
-    private DiscussionDao discussionDao;    
+    private DiscussionDao discussionDao;  
+    
+     @Autowired
+    private LikesDao likesDao; 
     
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public String home(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -68,7 +71,14 @@ public class AttractionController extends BaseController {
                 Discussiontopic dobj = (Discussiontopic) ditr.next();
                 dThreads.put(dobj.getId().toString(),dobj.getDiscussionthreadCollection());
             }
+            
+            int likes = likesDao.getLikesForAttaction(attId);
+            int dislikes = likesDao.getDislikesForAttaction(attId);
+            
+            model.addAttribute("likescount", likes);
+            model.addAttribute("dislikescount", dislikes);
             model.addAttribute("dThreads", dThreads);
+            
             
             setModelParameters(request, model, "attraction_view.jsp", "Attraction: "+attObj.getName());
         } else {
