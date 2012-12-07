@@ -16,8 +16,8 @@
     <div id="ticketcost">
         <strong>Ticket Cost:</strong> $${attraction.getCostperticket()}
     </div>
-    <div><a class="likeatt" href="${BasePath}/likes/like.htm?attId=${attraction.getId()}">Like</a>       <a class="dislikeatt" href="${BasePath}/likes/dislike.htm?attId=${attraction.getId()}">Dislike</a></div>
-    <div >Likes: ${attlikescount} &nbsp; Dislikes: ${attdislikescount}</div>
+    <div><a class="likeatt" href="${BasePath}/likes/likeatt.htm?attId=${attraction.getId()}">Like</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="dislikeatt" href="${BasePath}/likes/dislikeatt.htm?attId=${attraction.getId()}">Dislike</a></div>
+    <div >Likes: ${attlikescount}&nbsp;&nbsp;&nbsp;&nbsp;Dislikes: ${attdislikescount}</div>
 </div>
 <br>
 
@@ -27,8 +27,10 @@
     <ul>
         <c:forEach items="${discussions}" var="dobj">
             <li>
-                ${dobj.getTitle()} <a class="add-thread" href="${BasePath}/discussion/new_thread.htm?topicId=${dobj.getId()}">Add Thread</a>
-                
+                Topic: ${dobj.getTitle()} <a class="add-thread" href="${BasePath}/discussion/new_thread.htm?topicId=${dobj.getId()}">Add Thread</a>
+                <br>
+                Likes: ${topicLikes.get(dobj.getId().toString())} &nbsp;&nbsp;&nbsp; Dislikes: ${topicDislikes.get(dobj.getId().toString())}&nbsp;&nbsp;&nbsp;<a class="liketopic" href="${BasePath}/likes/liketopic.htm?topicId=${dobj.getId().toString()}">Like</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="disliketopic" href="${BasePath}/likes/disliketopic.htm?topicId=${dobj.getId().toString()}">Dislike</a>
+
                 <c:if test="${not empty dThreads.get(dobj.getId().toString())}">
                     <ol>
                         <c:forEach items="${dThreads.get(dobj.getId().toString())}" var="thobj">

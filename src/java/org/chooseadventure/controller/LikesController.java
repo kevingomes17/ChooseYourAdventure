@@ -29,7 +29,7 @@ public class LikesController extends BaseController{
     @Autowired
     private LikesDao likesDao; 
     
-    @RequestMapping(value = "/like")
+    @RequestMapping(value = "/likeatt")
     public String likeAttraction(String attId, HttpServletRequest request, HttpServletResponse response, Model model){
         System.out.println("Liking attraction id " + attId);
         Boolean flag = likesDao.likeAttaction(attId);
@@ -47,10 +47,46 @@ public class LikesController extends BaseController{
         return TemplateJson;
     }
     
-    @RequestMapping(value = "/dislike")
+    @RequestMapping(value = "/dislikeatt")
     public String dislikeAttraction(String attId, HttpServletRequest request, HttpServletResponse response, Model model){
         System.out.println("Liking attraction id " + attId);
         Boolean flag = likesDao.dislikeAttaction(attId);
+        
+        System.out.print("Liked");
+        HashMap<String,String> jresponse = new HashMap<String,String>();
+        jresponse.put("success", flag.toString());
+        if(flag == true) {
+            jresponse.put("message", "Successfully saved data.");
+        } else {
+            jresponse.put("message", "Not implemented yet!");
+        }
+        
+        model.addAttribute("response", toJSON(jresponse));
+        return TemplateJson;
+    }
+    
+    @RequestMapping(value = "/liketopic")
+    public String likeTopic(String topicId, HttpServletRequest request, HttpServletResponse response, Model model){
+        System.out.println("Liking attraction id " + topicId);
+        Boolean flag = likesDao.likeTopic(topicId);
+        
+        System.out.print("Liked");
+        HashMap<String,String> jresponse = new HashMap<String,String>();
+        jresponse.put("success", flag.toString());
+        if(flag == true) {
+            jresponse.put("message", "Successfully saved data.");
+        } else {
+            jresponse.put("message", "Not implemented yet!");
+        }
+        
+        model.addAttribute("response", toJSON(jresponse));
+        return TemplateJson;
+    }
+    
+    @RequestMapping(value = "/disliketopic")
+    public String dislikeTopic(String topicId, HttpServletRequest request, HttpServletResponse response, Model model){
+        System.out.println("Liking attraction id " + topicId);
+        Boolean flag = likesDao.dislikeTopic(topicId);
         
         System.out.print("Liked");
         HashMap<String,String> jresponse = new HashMap<String,String>();

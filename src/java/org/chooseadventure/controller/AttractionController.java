@@ -65,19 +65,26 @@ public class AttractionController extends BaseController {
             List<Discussiontopic> disList = discussionDao.getDiscussionTopicsbyAtt(attId);
             model.addAttribute("discussions", disList);
             
-            HashMap<String,Collection<Discussionthread>> dThreads = new HashMap<String,Collection<Discussionthread>>();            
+            HashMap<String,Collection<Discussionthread>> dThreads = new HashMap<String,Collection<Discussionthread>>();
+            HashMap<String,Integer> topicLikes = new HashMap<String,Integer>();
+            HashMap<String,Integer> topicDislikes = new HashMap<String,Integer>();
+            
             Iterator ditr = disList.iterator();
             while(ditr.hasNext()) {
                 Discussiontopic dobj = (Discussiontopic) ditr.next();
                 dThreads.put(dobj.getId().toString(),dobj.getDiscussionthreadCollection());
+                topicLikes.put(dobj.getId().toString(), likesDao.getLikesForTopic(dobj.getId().toString()));
+                topicDislikes.put(dobj.getId().toString(), likesDao.getDislikesForTopic(dobj.getId().toString()));
             }
             
-            int likes = likesDao.getLikesForAttaction(attId);
-            int dislikes = likesDao.getDislikesForAttaction(attId);
+            int attLikes = likesDao.getLikesForAttaction(attId);
+            int attDislikes = likesDao.getDislikesForAttaction(attId);
             
-            model.addAttribute("attlikescount", likes);
-            model.addAttribute("attdislikescount", dislikes);
+            model.addAttribute("attlikescount", attLikes);
+            model.addAttribute("attdislikescount", attDislikes);
             model.addAttribute("dThreads", dThreads);
+            model.addAttribute("topicLikes", topicLikes);
+            model.addAttribute("topicDislikes", topicDislikes);
             
             
             setModelParameters(request, model, "attraction_view.jsp", "Attraction: "+attObj.getName());
