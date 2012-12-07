@@ -75,7 +75,7 @@ public class BaseController {
         
         try {
             if(sess != null) {
-                String userId = sess.getAttribute("uname").toString();
+                String userId = sess.getAttribute("email").toString();
                 username = userId;
             }
         } catch(Exception e) {

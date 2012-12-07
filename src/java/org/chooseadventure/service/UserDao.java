@@ -7,7 +7,9 @@ package org.chooseadventure.service;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.management.Query;
 import javax.persistence.TypedQuery;
@@ -41,6 +43,27 @@ public class UserDao extends BaseDao {
             return cities;
         } catch(Exception e) {
             return new ArrayList<City>();
+        }
+    }
+    
+    public Boolean updatePhones(String username, String[] phones) {
+        try {
+            Userbase user = getUser(username);
+            Collection Userphones = user.getUserphonesCollection();
+            Iterator itr = Userphones.iterator();
+            int i = 0;
+            while(itr.hasNext()) {
+                Userphones pobj = (Userphones) itr.next();
+                pobj.setPhonenumber(new Long(phones[i]));
+                i++;
+                
+                daoService.update(pobj);
+            }
+            
+            return true;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

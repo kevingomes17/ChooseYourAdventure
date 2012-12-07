@@ -4,6 +4,7 @@
  */
 package org.chooseadventure.controller;
 
+import java.util.ArrayList;
 import org.springframework.stereotype.Controller;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +72,7 @@ public class UserController extends BaseController {
                         sess.invalidate();
                     }
 
-                    Errors.add("Looks like your account has not been setup. Please contact ITV Administrator!");
+                    Errors.add("Looks like your account has not been setup. Please contact Administrator!");
                 }
             }
         } catch (Exception e) {
@@ -92,8 +93,21 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/profile")
-    public String profile(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String profile(HttpServletRequest request, HttpServletResponse response, Model model) {        
+        String username = getUserIdFromSession(request);
         
+        if("POST".equals(request.getMethod())) {
+            String[] phones = request.getParameterValues("phone");
+            Boolean flag = userDao.updatePhones(username, phones);
+            if(flag == true) {
+                model.addAttribute("message", "Successfully updated phone nos.");
+            } else {
+                model.addAttribute("message", "Unable to update phone nos.");
+            }
+        }
+        
+        Userbase user = userDao.getUser(username);
+        model.addAttribute("user", user);
         setModelParameters(request, model, "user_profile.jsp", "Profile");
         return TemplateFile;
     }

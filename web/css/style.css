@@ -158,3 +158,8 @@ textarea {
 label.error {
     display: block;
 }
+.message, .messages, .info-messages {
+    padding: 5px;
+    background-color: lemonchiffon;
+    border: 1px solid lightgoldenrodyellow;
+}
