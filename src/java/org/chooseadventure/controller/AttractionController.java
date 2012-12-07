@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Produces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -157,5 +158,72 @@ public class AttractionController extends BaseController {
         return TemplateSubForm;
     }
 
+    @RequestMapping(value = "/purchase-attraction", method=RequestMethod.GET)
+    public String purchaseAttraction(HttpServletRequest request, HttpServletResponse response, Model model) {
+        String attId = Utils.GetValIfNull(request.getParameter("attractionId"), "");
+        
+        if(attId.isEmpty()) {
+            model.addAttribute("FatalError", 1);
+            model.addAttribute("FatalErrorMessage", "Attraction not given to purchase");
+        } else {
+            Attraction attObj = attractionDao.getAttraction(attId);
+            model.addAttribute("attraction", attObj);
+            Userbase user = attractionDao.getUserObj(getUserIdFromSession(request));
+            model.addAttribute("user", user);
+            model.addAttribute("paymentInfo", user.getUserpaymentinfo());
+        }
+        
+        setModelParameters(request, model, "purchase_attraction_ticket.jsp", "Purchase Attraction Ticket");
+        return TemplateFile;
+    }
+    
+    @RequestMapping(value = "/purchase-attraction", method=RequestMethod.POST)
+    public String purchaseAttraction_submitHandler(HttpServletRequest request, HttpServletResponse response, Model model) {
+        String username = getUserIdFromSession(request);
+        String numTickets = Utils.GetValIfNull(request.getParameter("num_tickets"), "");
+        String dateAvailable = Utils.GetValIfNull(request.getParameter("date_available"), "");
+        String attractionId = Utils.GetValIfNull(request.getParameter("attractionId"), "");
+        
+        String creditCardNum = Utils.GetValIfNull(request.getParameter("credit_card_num"), "");
+        String creditCardAmount = Utils.GetValIfNull(request.getParameter("credit_card_amount"), "");
+        String rewardPoints = Utils.GetValIfNull(request.getParameter("reward_points"), "");
+        String totalAmount = Utils.GetValIfNull(request.getParameter("total_amount"), "");
+                
+        HashMap<String,String> ds = new HashMap<String,String>(); 
+        ds.put("numTickets", numTickets);
+        ds.put("datAvailable", dateAvailable);
+        ds.put("attractionId", attractionId);
+        ds.put("creditCardNum", creditCardNum);
+        ds.put("creditCardAmount",creditCardAmount);
+        ds.put("rewardPoints", rewardPoints);
+        ds.put("totalAmount", totalAmount);
+        
+        Boolean flag = attractionDao.purchaseAttractionTicket(username, ds);
+        if(flag == true) {
+            model.addAttribute("successMessage", "Successfully purchased attraction ticket.");
+        } else {
+            model.addAttribute("successMessage", "Unable to complete transaction.");
+        }
+        setModelParameters(request, model, "Messages.jsp", "Purchase Attraction Ticket");
+        return TemplateFile;
+    }
 
+    @Produces({"application/json"})
+    @RequestMapping(value = "/attraction-tickets-available")
+    public String attractionTicketsAvailable(HttpServletRequest request, HttpServletResponse response, Model model) {
+        String numTickets = Utils.GetValIfNull(request.getParameter("num_tickets"), "");
+        String dateAvailable = Utils.GetValIfNull(request.getParameter("date_available"), "");
+        String attractionId = Utils.GetValIfNull(request.getParameter("attractionId"), "");
+        
+        HashMap<String,String> jresponse = new HashMap<String,String>();
+        Boolean flag = false;
+        
+        if(!numTickets.isEmpty() && !dateAvailable.isEmpty()) {
+            flag = attractionDao.isTicketAvailable(attractionId, numTickets, dateAvailable);
+        }
+        jresponse.put("success", flag.toString());
+        
+        model.addAttribute("response", toJSON(jresponse));
+        return TemplateJson;    
+    }
 }

@@ -17,5 +17,12 @@ public class AppConstants {
     public static int commentContentType = 5;
     public static int like = 1;
     public static int dislike = 2;
-    
+ 
+    public static String dateFormat = "MM-dd-yyyy";
+    public static int RoleCeo = 1;
+    public static int RoleVpOperations = 2;
+    public static int RoleVpMarketing = 3;
+    public static int RoleChiefEditor = 4;
+    public static int RoleDirector = 5;
+    public static int RoleStaffMaintenance = 6;
 }

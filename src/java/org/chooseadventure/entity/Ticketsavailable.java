@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Ticketsavailable.findById", query = "SELECT t FROM Ticketsavailable t WHERE t.id = :id"),
     @NamedQuery(name = "Ticketsavailable.findByRemainingtickets", query = "SELECT t FROM Ticketsavailable t WHERE t.remainingtickets = :remainingtickets"),
     @NamedQuery(name = "Ticketsavailable.findByDateavailable", query = "SELECT t FROM Ticketsavailable t WHERE t.dateavailable = :dateavailable"),
+    @NamedQuery(name = "Ticketsavailable.findByAttractionIdDateTickets", query = "SELECT t FROM Ticketsavailable t WHERE t.dateavailable = :dateavailable AND t.remainingtickets >= :remainingtickets AND t.attractionid = :attractionid"),
     @NamedQuery(name = "Ticketsavailable.findByCreatedby", query = "SELECT t FROM Ticketsavailable t WHERE t.createdby = :createdby"),
     @NamedQuery(name = "Ticketsavailable.findByCreatedon", query = "SELECT t FROM Ticketsavailable t WHERE t.createdon = :createdon"),
     @NamedQuery(name = "Ticketsavailable.findByModifiedby", query = "SELECT t FROM Ticketsavailable t WHERE t.modifiedby = :modifiedby"),

@@ -4,7 +4,7 @@
     <div class="message">${message}</div>
 </c:if>
 
-<table >
+<table>
     <tr>
         <td>Name:</td>
         <td>${user.getDisplayname()}</td>
@@ -39,3 +39,29 @@
         <td>${user.getAddress()}, ${user.getCity()}, ${user.getZipcode()}</td>
     </tr>    
 </table>
+    
+        <c:if test="${not empty transactions}">
+            <h4>Transactions</h4>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Created On</th>
+                        <th>Credit Card Amount</th>
+                        <th>Reward Points Used</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                
+            <c:forEach items="${transactions}" var="tobj">
+                <tr>
+                    <td>$${tobj.getAmount()}</td>
+                    <td>${tobj.getCreatedon()}</td>
+                    <td>$${tobj.getCreditcardamount()}</td>
+                    <td>${tobj.getRewardpointsused()}</td>
+                </tr>
+            </c:forEach>
+                </tbody>
+                </table>
+        </c:if>    

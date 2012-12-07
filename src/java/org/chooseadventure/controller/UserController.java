@@ -109,7 +109,10 @@ public class UserController extends BaseController {
         
         Userbase user = userDao.getUser(username);
         model.addAttribute("user", user);
-        setModelParameters(request, model, "user_profile.jsp", "Profile");
+        
+        List<Transactioninfo> ti_list = userDao.getTransactions(user);
+        model.addAttribute("transactions", ti_list);
+        setModelParameters(request, model, "user_profile.jsp", "My Profile");
         return TemplateFile;
     }
     

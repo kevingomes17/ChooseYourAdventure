@@ -76,7 +76,7 @@ public class Utils {
      * @author Hendrik Will, imwill.com
      * @param inputArray Array which contains strings
      * @param glueString String between each array element
-     * @return String containing all array elements seperated by glue string
+     * @return String containing all array elements separated by glue string
      */
     public static String implodeArray(String[] inputArray, String glueString) {
 
@@ -97,4 +97,6 @@ public class Utils {
 
         return output;
     }
+    
+    
 }

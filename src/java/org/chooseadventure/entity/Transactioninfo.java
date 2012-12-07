@@ -13,6 +13,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -40,6 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Transactioninfo.findByAmount", query = "SELECT t FROM Transactioninfo t WHERE t.amount = :amount"),
     @NamedQuery(name = "Transactioninfo.findByRewardpointsused", query = "SELECT t FROM Transactioninfo t WHERE t.rewardpointsused = :rewardpointsused"),
     @NamedQuery(name = "Transactioninfo.findByCreditcardamount", query = "SELECT t FROM Transactioninfo t WHERE t.creditcardamount = :creditcardamount"),
+    @NamedQuery(name = "Transactioninfo.findByUserId", query = "SELECT t FROM Transactioninfo t WHERE t.userid = :userid"),
     @NamedQuery(name = "Transactioninfo.findByCreatedby", query = "SELECT t FROM Transactioninfo t WHERE t.createdby = :createdby"),
     @NamedQuery(name = "Transactioninfo.findByCreatedon", query = "SELECT t FROM Transactioninfo t WHERE t.createdon = :createdon"),
     @NamedQuery(name = "Transactioninfo.findByModifiedby", query = "SELECT t FROM Transactioninfo t WHERE t.modifiedby = :modifiedby"),
@@ -48,6 +51,7 @@ public class Transactioninfo implements Serializable {
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_TRANSACTIONINFO_ID")
     @Basic(optional = false)
     @NotNull
     @Column(name = "ID")

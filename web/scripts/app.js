@@ -3,7 +3,8 @@
  * and open the template in the editor.
  */
 var AppConfig = {
-    baseUrl: '/ChooseYourAdventure' //no trailing slash
+    baseUrl: '/ChooseYourAdventure', //no trailing slash
+    dateFormat: 'mm-dd-yy'
 };
 var App = {
     initHome: function() {
@@ -83,7 +84,9 @@ var Attraction = {
                         return false;
                     }); 
                 },
-                failure: function() {commentsDiv.html('Unable to load comments. Try again!');}
+                failure: function() {
+                    commentsDiv.html('Unable to load comments. Try again!');
+                }
             });
             
             return false;
@@ -100,8 +103,10 @@ var Attraction = {
                 url: $(this).attr("href"),
                 success: function() {
                     alert('Liked!!');
-            },
-                failure: function() {alert('Unable to Like. Try again!');}
+                },
+                failure: function() {
+                    alert('Unable to Like. Try again!');
+                }
             });
             return false;
         });
@@ -112,8 +117,10 @@ var Attraction = {
                 url: $(this).attr("href"),
                 success: function() {
                     alert('Disliked!!');
-            },
-                failure: function() {alert('Unable to dislike. Try again!');}
+                },
+                failure: function() {
+                    alert('Unable to dislike. Try again!');
+                }
             });
             return false;
         });
@@ -124,8 +131,10 @@ var Attraction = {
                 url: $(this).attr("href"),
                 success: function() {
                     alert('Liked!!');
-            },
-                failure: function() {alert('Unable to Like. Try again!');}
+                },
+                failure: function() {
+                    alert('Unable to Like. Try again!');
+                }
             });
             return false;
         });
@@ -136,8 +145,10 @@ var Attraction = {
                 url: $(this).attr("href"),
                 success: function() {
                     alert('Disliked!!');
-            },
-                failure: function() {alert('Unable to dislike. Try again!');}
+                },
+                failure: function() {
+                    alert('Unable to dislike. Try again!');
+                }
             });
             return false;
         });
@@ -148,8 +159,10 @@ var Attraction = {
                 url: $(this).attr("href"),
                 success: function() {
                     alert('Liked!!');
-            },
-                failure: function() {alert('Unable to Like. Try again!');}
+                },
+                failure: function() {
+                    alert('Unable to Like. Try again!');
+                }
             });
             return false;
         });
@@ -160,21 +173,115 @@ var Attraction = {
                 url: $(this).attr("href"),
                 success: function() {
                     alert('Disliked!!');
-            },
-                failure: function() {alert('Unable to dislike. Try again!');}
+                },
+                failure: function() {
+                    alert('Unable to dislike. Try again!');
+                }
             });
             return false;
         });
+    },
+    
+    checkTicketAvailability: function() {
+        if($('#num-tickets').valid() && $('#date-available').valid()) {
+            var numTickets = $('#num-tickets').val();
+            var dateAvailable = $('#date-available').val();
+            var attractionId = $('#attractionId').val();
+        
+            $.ajax({
+                method: 'GET',
+                url: AppConfig.baseUrl+'/attraction/attraction-tickets-available.htm',
+                data: {
+                    'num_tickets': numTickets, 
+                    'date_available': dateAvailable, 
+                    'attractionId': attractionId
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if(response.success == 'true') {
+                        $('#credit-card-info').show();
+                    
+                        var ticketCost = $('#ticket-cost').val();
+                        var numTickets = $('#num-tickets').val();
+                        $('#total-amount').val(ticketCost*numTickets);
+                        $('#credit-card-amount').val(ticketCost*numTickets);
+                    } else {
+                        $('#credit-card-info').hide();
+                        alert('Specified number of tickets not available for the given date.');
+                    }
+                }
+            });
+        }        
+    },
+    
+    initPurchase: function() {        
+        //Initialize date picker
+        $('.date-picker').datepicker({
+            dateFormat: AppConfig.dateFormat,
+            minDate: 0
+        }).attr('readonly', 'readonly');
+        
+        //Update credit card amount, as the user updates the reward points.
+        $('#reward-points').blur(function() {
+            var rewardPointsUsed = $(this).val();
+            var ticketCost = $('#ticket-cost').val();
+            var numTickets = $('#num-tickets').val();
+            
+            var totalCost = ticketCost * numTickets;
+            $('#credit-card-amount').val(totalCost-rewardPointsUsed);
+        });
+        
+        $('#purchase-attraction-ticket-form').submit(function() {
+            //var ticketCost = $('#ticket-cost').val();
+            //var numTickets = $('#num-tickets').val();            
+            //var totalCost = ticketCost * numTickets;
+            
+            var availableRewardPoints = $('#available-reward-points').val();
+            var rewardPointsUsed = $('#reward-points').val();
+           
+            if(availableRewardPoints == '') {
+                if(parseInt(rewardPointsUsed) > 0) {
+                    $('#reward-points').addClass('error');
+                    flag = false;
+                } else {
+                    $('#reward-points').removeClass('error');
+                    flag = true;
+                }
+            } else {
+                if(parseInt(rewardPointsUsed) > parseInt(availableRewardPoints)) {
+                    $('#reward-points').addClass('error');
+                    flag = false;
+                } else {
+                    $('#reward-points').removeClass('error');
+                }
+            }
+            
+            if(flag == false) { alert('Overuse of Reward points. Please correct form errors'); }
+            return flag;
+        });
+        $('#purchase-attraction-ticket-form').validate();
     }
 };
 
 var AppDialog = {
     dialogId: 'dialog-form',
     dimensions: {
-        'default': {width: 300, height: 200},
-        'small': {width: 300, height: 200},
-        'medium': {width: 600, height: 400},
-        'large': {width: 900, height: 600}
+        'default': {
+            width: 300, 
+            height: 200
+        },
+        'small': {
+            width: 300, 
+            height: 200
+        },
+        'medium': {
+            width: 600, 
+            height: 400
+        },
+        'large': {
+            width: 900, 
+            height: 600
+        }
     },
     
     showDialog: function(urlStr, dimension, title) {
@@ -243,29 +350,31 @@ var AppDialog = {
     _disableSave: function() {
         var AD = AppDialog;
         var buttons = $('#'+AD.dialogId).dialog('option', 'buttons', [
-            {
-                text: 'Saving..',
-                click: function() { }
-            }
+        {
+            text: 'Saving..',
+            click: function() { }
+        }
         ]);
     },
     
     _enableSave: function() {
         var AD = AppDialog;
         var buttons = $('#'+AD.dialogId).dialog('option', 'buttons', [
-            {
-                text: 'Save',
-                click: function() {
-                    var AD = AppDialog;                    
-                    if($(this).find('form').valid()) {
-                        AD._submitForm();
-                    }
+        {
+            text: 'Save',
+            click: function() {
+                var AD = AppDialog;                    
+                if($(this).find('form').valid()) {
+                    AD._submitForm();
                 }
-            },
-            {
-                text: 'Close',
-                click: function() {$(this).dialog('close');}
             }
+        },
+        {
+            text: 'Close',
+            click: function() {
+                $(this).dialog('close');
+            }
+        }
         ]);
     },
     

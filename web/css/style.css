@@ -29,11 +29,19 @@ h2 {
 h1 {
     text-align: center;
     border-bottom: 1px solid #000;
-    font-size: 22px;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    padding: 10px;
 }
 h4 {
     border-bottom: 1px solid #cfcfcf;
     margin-bottom: 5px;
+}
+.width_980 {
+    display: block;
+    with:980px;
+    margin: auto;
 }
 .main-wrapper { 
     display: block;
@@ -162,4 +170,7 @@ label.error {
     padding: 5px;
     background-color: lemonchiffon;
     border: 1px solid lightgoldenrodyellow;
+}
+input.error {
+    border: 1px solid #b00;
 }

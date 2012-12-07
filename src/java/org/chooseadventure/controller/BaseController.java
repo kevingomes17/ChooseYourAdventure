@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import javax.servlet.http.HttpSession;
+import org.chooseadventure.utils.AppConstants;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -30,7 +31,10 @@ import org.codehaus.jackson.map.ObjectMapper;
  * @author kevingomes17
  */
 @Controller
-public class BaseController {        
+public class BaseController {
+    @Autowired
+    private UserDao userDaoObj;
+    
     protected ArrayList<String> Errors = new ArrayList();
     
     protected String BasePath = "/ChooseYourAdventure"; //no trailing slash
@@ -50,12 +54,19 @@ public class BaseController {
     
     protected void setModelParameters(HttpServletRequest request, Model model, String filename, String pageTitle) {
         String username = getUserIdFromSession(request);
-        
+        Userbase user = userDaoObj.getUser(username);
+                
         LinkedHashMap<String,String> primaryMenu = new LinkedHashMap<String,String>();
         primaryMenu.put("Home", BasePath+HomeUrl);
-        primaryMenu.put("My ITV", "");
-        primaryMenu.put("Approve ITV", "");
-        primaryMenu.put("Budgets", "");
+        primaryMenu.put("My Profile", BasePath+"/user/profile.htm");        
+        
+        Boolean isCeo = userDaoObj.hasRole(username, AppConstants.RoleCeo);
+        Boolean isChiefEditor = userDaoObj.hasRole(username, AppConstants.RoleChiefEditor);
+        Boolean isVpMarketing = userDaoObj.hasRole(username, AppConstants.RoleVpMarketing);
+        if(isCeo == true || isChiefEditor == true || isVpMarketing == true) {
+            primaryMenu.put("View Guests", BasePath+"/user/view-guests.htm");
+        }
+        
         primaryMenu.put("Logout", BasePath+LogoutUrl);
         
         model.addAttribute("Filename", filename);
