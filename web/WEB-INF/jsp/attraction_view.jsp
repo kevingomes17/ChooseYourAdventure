@@ -17,7 +17,7 @@
         <strong>Ticket Cost:</strong> $${attraction.getCostperticket()}
     </div>
     <div><a class="likeatt" href="${BasePath}/likes/like.htm?attId=${attraction.getId()}">Like</a>       <a class="dislikeatt" href="${BasePath}/likes/dislike.htm?attId=${attraction.getId()}">Dislike</a></div>
-    <div >Likes: ${likescount} &nbsp; Dislikes: ${dislikescount}</div>
+    <div >Likes: ${attlikescount} &nbsp; Dislikes: ${attdislikescount}</div>
 </div>
 <br>
 
@@ -28,6 +28,7 @@
         <c:forEach items="${discussions}" var="dobj">
             <li>
                 ${dobj.getTitle()} <a class="add-thread" href="${BasePath}/discussion/new_thread.htm?topicId=${dobj.getId()}">Add Thread</a>
+                
                 <c:if test="${not empty dThreads.get(dobj.getId().toString())}">
                     <ol>
                         <c:forEach items="${dThreads.get(dobj.getId().toString())}" var="thobj">

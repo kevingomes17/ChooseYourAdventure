@@ -75,8 +75,8 @@ public class AttractionController extends BaseController {
             int likes = likesDao.getLikesForAttaction(attId);
             int dislikes = likesDao.getDislikesForAttaction(attId);
             
-            model.addAttribute("likescount", likes);
-            model.addAttribute("dislikescount", dislikes);
+            model.addAttribute("attlikescount", likes);
+            model.addAttribute("attdislikescount", dislikes);
             model.addAttribute("dThreads", dThreads);
             
             
