@@ -1036,6 +1036,36 @@ ALTER TABLE TEAM
 ;
 
 /* Create Functions */
+create or replace function get_employee_leave_status(emp_id number, dt_given date)
+return varchar2 as
+begin
+declare
+       ret_status varchar2(50);
+       emp_role varchar2(50);
+       onleave number;
+begin
+
+       -- check if the employee was or will be on leave on the specified date. If on leave return 'On Leave'
+       select count(dayoff) into onleave from employeedateworking where TRUNC( dayoff) = TO_DATE(dt_given) and userid = emp_id;
+       if onleave >0 then
+          ret_status := 'On Leave';
+          return ret_status;
+       end if;
+       -- get the role for this employee. In case the employee has two role, show them supported by 'AND'
+       for rls in (select role.name rolename from employeerole emr, role where emr.roleid = role.id and emr.employeeid = emp_id)
+       loop
+          
+          if ret_status is null then
+              ret_status := ret_status || rls.rolename;
+          else
+              ret_status := ret_status || ' AND ' || rls.rolename;
+          end if;
+          
+       end loop;
+return ret_status;
+end;
+end;
+/
 create or replace function Get_SecPerson_Unavailable( directId number, date_req date)
 return varchar2
  as
