@@ -48,7 +48,7 @@ public class LikesDao extends BaseDao {
 
     }
 
-    public boolean likeForAttaction(String attId) {
+    public boolean likeAttaction(String attId) {
         try {
             Date date = new Date();
 
@@ -64,7 +64,6 @@ public class LikesDao extends BaseDao {
             e.printStackTrace();
             return false;
         }
-
     }
 
     public int getDislikesForAttaction(String attId) {
@@ -81,5 +80,23 @@ public class LikesDao extends BaseDao {
             return 0;
         }
 
+    }
+    
+     public boolean dislikeAttaction(String attId) {
+        try {
+            Date date = new Date();
+
+            Likes like = new Likes();
+            like.setContenttype(AppConstants.attContentType);
+            like.setLikeordislike(new BigInteger(String.valueOf(AppConstants.dislike)));
+            like.setForeignid(Integer.parseInt(attId));
+            like.setModifiedon(date);
+            like.setCreatedon(date);
+            return daoService.insert(like);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

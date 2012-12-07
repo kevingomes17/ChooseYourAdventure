@@ -1,3 +1,4 @@
+<%@page import="org.chooseadventure.service.LikesDao"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div id="view-attraction-wrapper">
@@ -15,6 +16,7 @@
     <div id="ticketcost">
         <strong>Ticket Cost:</strong> $${attraction.getCostperticket()}
     </div>
+    <div><a class="likeatt" href="${BasePath}/likes/like.htm?attId=${attraction.getId()}">Like</a>       <a class="dislikeatt" href="${BasePath}/likes/dislike.htm?attId=${attraction.getId()}">Dislike</a></div>
     <div >Likes: ${likescount} &nbsp; Dislikes: ${dislikescount}</div>
 </div>
 <br>

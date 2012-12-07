@@ -93,6 +93,30 @@ var Attraction = {
             AppDialog.showDialog(this.href, 'medium', 'Add Thread');            
             return false;
         });
+        
+        $("a.likeatt").click(function(){
+            $.ajax({
+                method: 'GET',
+                url: $(this).attr("href"),
+                success: function() {
+                    alert('Liked!!');
+            },
+                failure: function() {alert('Unable to Like. Try again!');}
+            });
+            return false;
+        });
+        
+        $("a.dislikeatt").click(function(){
+            $.ajax({
+                method: 'GET',
+                url: $(this).attr("href"),
+                success: function() {
+                    alert('Disliked!!');
+            },
+                failure: function() {alert('Unable to dislike. Try again!');}
+            });
+            return false;
+        });
     }
 };
 
